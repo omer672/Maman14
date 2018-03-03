@@ -1,7 +1,7 @@
 #include "helper.h"
 #include "symbolTable.h"
 #define MAX_PARAMS 256
-
+/*another comment check*/
 void iterate(FILE* file)
 {
     IC = 0;

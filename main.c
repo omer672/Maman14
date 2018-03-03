@@ -1,4 +1,5 @@
 #include "main.h"
+#include "firstIteration.c"
 
 char* instructions[] = {"mov", "cmp", "add", "sub", "lea","not","clr","inc","dec", "jmp", "bne", "red", "prn", "jsr","rts", "stop"};
 char* dataTypes[] = {"data","string","struct"};
