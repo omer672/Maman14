@@ -1,6 +1,3 @@
-//
-// Created by talbo on 03/03/2018.
-//
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,3 +11,4 @@ int TwosComplements(int number);
  * the func will get integer binary number
  * the func will return array of characters by strange base 32*/
 char* ConvertBinTo32(int number);
+

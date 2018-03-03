@@ -1,31 +1,33 @@
 #include "helper.h"
 #include "symbolTable.h"
 #define MAX_PARAMS 256
-/*another comment check*/
+/*iterate Function - Runs on the files for the first time
+ * Inout - as file
+ * Output - */
 void iterate(FILE* file)
 {
     IC = 0;
     DC = 0;
-    int j,i,numberOfParams = 0;
-    int foundSymbol = 0;
-    int numberOfLines = 0;
+    int j,i,numberOfParams = 0;     /*Auxiliary integers*/
+    int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
+    int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
     int lineLength = LINE_LENGTH;
-    char* symbolPos;
+    char* symbolPos;                /*Auxiliary pointer - to position of symbol*/
     char* lineParams[MAX_PARAMS];
-    char* delimit = " \t";
+    char* delimit = " \t";          /*Auxiliary flag for tabs*/
     char lineBuffer[LINE_LENGTH];
     char value[MAX_DIGITS];
-    while(getline(&lineBuffer,&lineLength,file) != EOF)
+    while(getline(&lineBuffer,&lineLength,file) != EOF) /*getline equals to fgets?*/
     {
         /* Get all parameters on a line */
         lineParams[numberOfParams] = strtok(lineBuffer,delimit);
         while(lineParams[numberOfParams])
-        { //TODO: fix me, maybe use scanf
+        { /*TODO: fix me, maybe use scanf *****fgets will help?*/
           i++;
           lineParams[numberOfParams]=strtok(NULL,delimit);
         }
         /* Iterate them */
-        if(symbolPos = strchr(lineParams[0],':'))
+        if(symbolPos = strchr(lineParams[0],':'))   /*Checks if Label*/
         {
             foundSymbol = 1;
         }

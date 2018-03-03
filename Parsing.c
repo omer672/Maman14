@@ -1,10 +1,8 @@
-//
-// Created by talbo on 03/03/2018.
-//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+/***** Need to be done - how to combine these functions in*****/
 /* Two Complement Method in order to avoid negative numbers
  * The func will get number(binary)
  * The func will return integer presented as binary number

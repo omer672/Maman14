@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define LINE_LENGTH 80
+#define LINE_LENGTH 80 /*Max line length*/
 #define NUM_OF_INSTRUCTS 16
 #define NUM_OF_DATA_TYPES 3
 #define NUM_OF_REGISTERS 8
