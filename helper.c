@@ -1,5 +1,5 @@
 #include "helper.h"
-
+/*COMMENT*/
 int isInstuction(char* string)
 {
     return searchStringInArray(instructions,NUM_OF_INSTRUCTS,string);
