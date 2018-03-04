@@ -2,6 +2,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/*string to binary - > binary -> strange base*/
+/*check if negative -> use two complements*/
+/*DOESNOT WORK YET*/
+
+int stringToBinary(char* s) {
+    if(s == NULL) return 0; /* no input string */
+    size_t len = strlen(s);
+    char *binary = malloc(len*8 + 1); // each char is one byte (8 bits) and + 1 at the end for null terminator
+    binary[0] = '\0';
+    for(size_t i = 0; i < len; ++i) {
+        char ch = s[i];
+        for(int j = 7; j >= 0; --j){
+            if(ch & (1 << j)) {
+                strcat(binary,"1");
+            } else {
+                strcat(binary,"0");
+            }
+        }
+    }
+    return binary;
+}
+
+
 /***** Need to be done - how to combine these functions in*****/
 /* Two Complement Method in order to avoid negative numbers
  * The func will get number(binary)
