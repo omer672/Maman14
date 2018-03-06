@@ -1,5 +1,16 @@
 #include "helper.h"
-/*COMMENT*/
+
+int searchStringInArray(char* array[],int length, char* string)
+{
+    int i;
+    for(i=0;i<length;i++)
+    {
+        if(strcmp(array[i],string))
+            return 1;
+    }
+    return 0;
+}
+
 int isInstuction(char* string)
 {
     return searchStringInArray(instructions,NUM_OF_INSTRUCTS,string);
@@ -35,30 +46,38 @@ int isString(char* string)
 
 }
 
-int searchStringInArray(char* array[],int length, char* string)
-{
-    int i;
-    for(i=0;i<length;i++)
-    {
-        if(strcmp(array[i],string))
-            return 1;
-    }
-    return 0;
-}
-
-void insertData(char* type, char* data[] , int dataStart, int end)
+/* TODO: please implement Tal - insert into data array, and increase DC */
+void insertData(char* type, char* data)
 {
 
-    if(strcmp(str,dataTypes[0]))
+    if(strcmp(type,dataTypes[0]))
     {
         //expect ints
     }
-    else if(strcmp(str,dataTypes[1]))
+    else if(strcmp(type,dataTypes[1]))
     {
         //expect string
     }
     else
     {//expect struct
+
+    }
+}
+
+/* TODO: please implement Tal - insert into symbol table */
+void insertExtern(char* symbols)
+{
+
+}
+/* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
+void insertInstruction(char* instruction, char* operands, int isSecondIteration)
+{
+    if(isSecondIteration) /*Tal: different behaviours depending on iteration - read on it please*/
+    {
+
+    }
+    else
+    {
 
     }
 }

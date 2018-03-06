@@ -2,7 +2,21 @@
 
 Symbol* head = NULL;
 
-int setSymbol(char* name,char* value,char *mark, Types type)
+int isLegal(char* symbol)
+{
+    unsigned int i;
+    if(isalpha(symbol[0]) && strlen(symbol) <= MAX_SYMBOL_LEN)
+    {
+        for(i=1;i<strlen(symbol);i++)
+            if(!isalnum(symbol[i]))
+                return 0;
+        if(!isRegister(symbol) && !isInstuction(symbol) && !isDataType(symbol))
+            return 1;
+    }
+    return 0;
+}
+
+int setSymbol(char* name,int value,char *mark, Types type)
 {
     if(!isLegal(name))
         return 0;
@@ -12,16 +26,8 @@ int setSymbol(char* name,char* value,char *mark, Types type)
     return 1;
 }
 
-int isLegal(char* symbol)
+Symbol* getHead()
 {
-    int i;
-    if(isalpha(symbol[0]) && strlen(symbol) <= MAX_SYMBOL_LEN)
-    {
-        for(int i=1;i<strlen(symbol);i++)
-            if(!isalnum(symbol[i]))
-                return 0;
-        if(!isRegister(symbol) && !isInstuction(symbol) && !isDataType(symbol))
-            return 1;
-    }
-    return 0;
+    return head;
 }
+

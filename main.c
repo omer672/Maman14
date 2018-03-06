@@ -1,5 +1,5 @@
 #include "main.h"
-#include "firstIteration.c"
+
 /*Global variables*/
 char* instructions[] = {"mov", "cmp", "add", "sub", "lea","not","clr","inc","dec", "jmp", "bne", "red", "prn", "jsr","rts", "stop"};
 char* dataTypes[] = {"data","string","struct"};
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-/*runProg - Consider Copying it outside main*/
+/*runProg - Consider Copying it outside main - Tal please move it somewhere - a file that doesnt include main.h*/
 void runProg(char* fileName)
 {
     FILE* file;

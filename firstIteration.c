@@ -1,77 +1,66 @@
-#include "helper.h"
-#include "symbolTable.h"
-#define MAX_PARAMS 256
-/*iterate Function - Runs on the files for the first time
- * Inout - as file
- * Output - */
+#include "firstIteration.h"
+
 void iterate(FILE* file)
 {
-    IC = 0;
-    DC = 0;
-    int j,i,numberOfParams = 0;     /*Auxiliary integers*/
+    int IC = 0;
+    int DC = 0;
+    int errorsFound;
+    int i;     /*Auxiliary integers*/
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
-    int lineLength = LINE_LENGTH;
-    char* symbolPos;                /*Auxiliary pointer - to position of symbol*/
-    char* lineParams[MAX_PARAMS];
+    char* symbolPos;               /*Auxiliary pointer - to position of symbol*/
+    char* command;
+    char* restOfLine = NULL;
+    char* symbol;
     char* delimit = " \t";          /*Auxiliary flag for tabs*/
     char lineBuffer[LINE_LENGTH];
-    char value[MAX_DIGITS];
-    while(getline(&lineBuffer,&lineLength,file) != EOF) /*getline equals to fgets?*/
+    char linebufferCopy[LINE_LENGTH]; /*Copy of the line buffer because strtok destroys the string*/
+
+    while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
-        /* Get all parameters on a line */
-        lineParams[numberOfParams] = strtok(lineBuffer,delimit);
-        while(lineParams[numberOfParams])
-        { /*TODO: fix me, maybe use scanf *****fgets will help?*/
-          i++;
-          lineParams[numberOfParams]=strtok(NULL,delimit);
-        }
-        /* Iterate them */
-        if(symbolPos = strchr(lineParams[0],':'))   /*Checks if Label*/
+        strcpy(linebufferCopy,lineBuffer);
+        command = strtok(lineBuffer,delimit);
+        if(symbolPos = strchr(command,':'))   /*Checks if there is a symbol*/
         {
+            symbol = strtok(command,":");
             foundSymbol = 1;
+            command = strtok(NULL,delimit); /*Should contain instruction/data command*/
+            restOfLine = strtok(NULL,""); /*Gets the rest of the line*/
         }
-        for(i=foundSymbol;i<numberOfParams;i++)
+        if(isDataType(command)) /*Data type*/
         {
-            if(isDataType(lineParams[i]))
+            if(foundSymbol)
+            {
+                setSymbol(symbol,DC,"data",relocatable);
+            }
+            insertData(command,restOfLine);
+        }
+        else
+        {
+            if(isExtern(command) || isEntry(command)) /*Extern/Entry*/
+            {
+                if(isExtern(command))
+                    insertExtern(restOfLine);
+                else
+                    ; /*TOOD: write it in entries file*/
+            }
+            else /*Instuction*/
             {
                 if(foundSymbol)
                 {
-                    sprintf(value,"%d",DC);
-                    setSymbol(strtok(lineParams[0],":"),value,Types.relocatable);
+                    setSymbol(symbol,IC,"",relocatable);
                 }
-                insertData(lineParams[i],lineParams,i+1,numberOfParams);
-                break;
-            }
-            else
-            {
-                if(isExtern(lineParams[i]) || isEntry(lineParams[i]))
-                {
-                    if(isExtern(lineParams[i]))
-                        for(j=i+1;j<numberOfParams;j++)
-                        {
-                            setSymbol(lineParams[j],'0',Types.external);
-                        }
-                    break;
-                }
-                else
-                {
-                    if(foundSymbol)
-                    {
-                        sprintf(value,"%d",IC);
-                        setSymbol(strtok(lineParams[0],":"),value,Types.relocatable);
-                    }
-                    if(isInstuction(lineParams[i]))
-                        //build it
-                        ;
-                    //calc L
-                    break;
-
-                }
+                if(isInstuction(command))
+                    insertInstruction(command,restOfLine, 0);
             }
         }
         numberOfLines++;
     }
     if(numberOfLines == 0)
         printf("Empty file, moving on");
+    if(!errorsFound)
+    {
+        /*TODO: add IC to data symbols*/
+        secondIterate(file);
+    }
 }

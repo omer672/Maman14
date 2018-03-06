@@ -5,7 +5,7 @@ Symbol* alloc()
     return (Symbol*)malloc(sizeof(Symbol));
 }
 
-void add(Symbol** head,char* name,char* value,char* mark,Types type)
+void add(Symbol** head,char* name,int value,char* mark,Types type)
 {
     Symbol* curr;
     if(*head == NULL)
