@@ -31,3 +31,8 @@ Symbol* getHead()
     return head;
 }
 
+Symbol* doesExist(char* name)
+{
+    return search(head,name);
+}
+

@@ -25,17 +25,16 @@ void secondIterate(FILE* file)
             command = strtok(NULL,delimit); /*Should contain instruction/data command*/
             restOfLine = strtok(NULL,""); /*Gets the rest of the line*/
         }
-        if(isDataType(command) || isExtern(command)) /*Data type or extern*/
+        if(!(isDataType(command) || isExtern(command))) /*Data type or extern*/
         {
-
-        }
-        else if(isEntry(command)) /*Entry*/
-        {
-
-        }
-        else
-        {
-            insertInstruction(command,restOfLine, 1);
+            if(isEntry(command)) /*Entry*/
+            {
+                markEntry(restOfLine);
+            }
+            else /*Instruction*/
+            {
+                insertInstruction(command,restOfLine, 1);
+            }
         }
         numberOfLines++;
     }

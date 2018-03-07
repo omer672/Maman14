@@ -1,5 +1,4 @@
 #include "main.h"
-#include <string.h>
 
 int isInstuction(char* string);
 

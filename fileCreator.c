@@ -9,7 +9,6 @@ void createObjFile(char *fileName)
     char lineBuffer[5];
     char* code, address;
     char finalFileName[strlen(fileName)+3];
-
     FILE* file;
     strcat(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ob");
@@ -39,7 +38,6 @@ void createObjFile(char *fileName)
 
 void createExternFile(char *fileName)
 {
-    int i = 0;
     char lineBuffer[LINE_LENGTH];
     char* address,name;
     char finalFileName[strlen(fileName)+4];
@@ -73,7 +71,35 @@ void createExternFile(char *fileName)
 
 void createEntryFile(char *fileName)
 {
-
+    char lineBuffer[LINE_LENGTH];
+    char* address,name;
+    char finalFileName[strlen(fileName)+4];
+    Symbol* head;
+    Symbol* curr;
+    FILE* file;
+    strcat(finalFileName,fileName); /* creates the file */
+    strcat(finalFileName,".ent");
+    if(file = fopen(finalFileName ,"w"))
+    {
+        head = getHead();
+        curr = head;
+        while(curr)
+        {
+            if(strcmp(curr->mark,ENTRY))
+            {
+                name = curr->name;
+                address = ConvertBinTo32(curr->value);
+                sprintf(lineBuffer,"%s\t%s",name,address);
+                fputs(lineBuffer,file);
+            }
+            curr = curr->next;
+        }
+        fclose(file);
+    }
+    else
+    {
+        /* ERROR */
+    }
 }
 
 void createOutputFiles(char *fileName)

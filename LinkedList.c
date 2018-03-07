@@ -31,13 +31,13 @@ void add(Symbol** head,char* name,int value,char* mark,Types type)
     }
 }
 
-int search(Symbol* head, char* name)
+Symbol* search(Symbol* head, char* name)
 {
     Symbol* curr = head;
     while(curr)
     {
         if(strcmp(curr->name,name))
-            return 1;
+            return curr;
     }
-    return 0;
+    return NULL;
 }

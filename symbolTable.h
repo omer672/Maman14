@@ -6,3 +6,4 @@
 int setSymbol(char* name,int value,char* mark,Types type);
 
 Symbol* getHead();
+Symbol* doesExist(char* name);
