@@ -124,9 +124,42 @@ void insertExtern(char* symbols)
 
     }
 }
+/*gets string operands and checks its type - imm, direct, struct, register*/
+opType checkType(char *reqOp)
+{
+    opType operand;
+    if(reqOp[0]=="#")
+        operand=Immediate;
+    else if()
+        operand=Direct;
+    else if()
+        operand=Struct;
+    else if()
+        operand=Register;
+    else
+        printf("ERROR");
+    return operand;
+}
+
+int opSumRow(opType operand)
+{
+    /*IMPLEMENT*/
+}
+
+int instSumRow(char *first, char *second)
+{
+    /*IMPLEMENT*/
+}
+
 /* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 void insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
+    /*to calculate L need to check how many rows the instruction will take*/
+    /*Needed Functions
+     * check operands type - checkType
+     * check machine code the operand will take by his type - opSumRow
+     * take the whole row and check how many rows will take - instSumRow
+     * add instruction to array and increase by L - This func*/
     if(isSecondIteration) /*Tal: different behaviours depending on iteration - read on it please*/
     {
 
