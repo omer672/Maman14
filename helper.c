@@ -124,32 +124,7 @@ void insertExtern(char* symbols)
 
     }
 }
-/*gets string operands and checks its type - imm, direct, struct, register*/
-opType checkType(char *reqOp)
-{
-    opType operand;
-    if(reqOp[0]=="#")
-        operand=Immediate;
-    else if()
-        operand=Direct;
-    else if()
-        operand=Struct;
-    else if()
-        operand=Register;
-    else
-        printf("ERROR");
-    return operand;
-}
 
-int opSumRow(opType operand)
-{
-    /*IMPLEMENT*/
-}
-
-int instSumRow(char *first, char *second)
-{
-    /*IMPLEMENT*/
-}
 
 /* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 void insertInstruction(char* instruction, char* operands, int isSecondIteration)
