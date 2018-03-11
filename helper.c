@@ -137,7 +137,7 @@ void insertInstruction(char* instruction, char* operands, int isSecondIteration)
     temp=strtok(NULL,',');
     strcpy(secondOp,temp);//second operand
     sumL=instSumRow(firstOp,secondOp);//Sum of rows - to IC
-    keepBin=stringToBinary(instruction);
+    keepBin=searchOp(instruction);//will search the command and return its place(equals to his binary number)
     //insert 4 bits instruction binary to array
     instructionsArray[IC]=keepBin;
     opType type;
@@ -152,10 +152,9 @@ void insertInstruction(char* instruction, char* operands, int isSecondIteration)
     //insert 2 bits for A/R/E - OMER, can implement this one?
     instructionsArray[IC]=
 
-    IC+=sumL;
+    IC+=sumL;//increases IC by the rows needed by the inserted command
 
-
-    /*EDGE CASE - More than 2 operands*/
+    /*EDGE CASE ERROR - More than 2 operands at the same command*/
 
 
     /*OMER - think IC need to be static/extern/part of the function? */
@@ -168,7 +167,7 @@ void insertInstruction(char* instruction, char* operands, int isSecondIteration)
     /*First iterate*/
     if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
     {
-        /*Doesnt recognize new symbols*/
+        /**/
 
 
     }
@@ -176,5 +175,5 @@ void insertInstruction(char* instruction, char* operands, int isSecondIteration)
     else
     {
 
-    }*/
+    }*
 }

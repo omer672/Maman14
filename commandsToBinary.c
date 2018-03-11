@@ -115,3 +115,18 @@ int instSumRow(char *first, char *second)
     sumRows=firstOpSum+SecOpSum+1;
     return sumRows;
 }
+/*search the command, return his place(equals to his binary 4 bits)*/
+int searchOp(char* opCode)
+{
+    int i=0;
+    while(i!=16)
+    {
+        if(strcmp(opCode,opCodes[i])==0) {
+            found = i;
+            return found;
+        }
+        else
+            i++;
+    }
+    return -1;
+}
