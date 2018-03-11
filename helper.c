@@ -129,18 +129,52 @@ void insertExtern(char* symbols)
 /* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 void insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
+    int sumL=0;
+    int keepBin;//keep the binary num before insert to instruction array
+    char* firstOp, secondOp;
+    char* temp=strtok(operands,',');
+    strcpy(firstOp,temp); //first operand
+    temp=strtok(NULL,',');
+    strcpy(secondOp,temp);//second operand
+    sumL=instSumRow(firstOp,secondOp);//Sum of rows - to IC
+    keepBin=stringToBinary(instruction);
+    //insert 4 bits instruction binary to array
+    instructionsArray[IC]=keepBin;
+    opType type;
+    type=checkType(firstOp);
+    keepBin= type;//get binary by enum place.
+    //insert 2 bits for source operand
+    instructionsArray[IC]=(instructionsArray[IC]<<2)+keepBin;
+    type=checkType(secondOp);
+    keepBin=type;
+    //insert 2 bits for destination operand
+    instructionsArray[IC]=(instructionsArray[IC]<<2)+keepBin;
+    //insert 2 bits for A/R/E - OMER, can implement this one?
+    instructionsArray[IC]=
+
+    IC+=sumL;
+
+
+    /*EDGE CASE - More than 2 operands*/
+
+
+    /*OMER - think IC need to be static/extern/part of the function? */
     /*to calculate L need to check how many rows the instruction will take*/
     /*Needed Functions
      * check operands type - checkType
      * check machine code the operand will take by his type - opSumRow
      * take the whole row and check how many rows will take - instSumRow
      * add instruction to array and increase by L - This func*/
-    if(isSecondIteration) /*Tal: different behaviours depending on iteration - read on it please*/
+    /*First iterate*/
+    if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
     {
+        /*Doesnt recognize new symbols*/
+
 
     }
+    /*Second iterate*/
     else
     {
 
-    }
+    }*/
 }

@@ -74,8 +74,44 @@ int opSumRow(opType operand)
     }
     return rowCnt;
 }
-
+/*takes 2 operands and returns number of rows the command will take*/
 int instSumRow(char *first, char *second)
 {
-    /*IMPLEMENT*/
+    int firstOpSum=0;
+    int secOpSum=0;
+    int sumRows=0;
+    opType firstTP, secondTP;
+    /*check if only first operand exist*/
+    if(first!=NULL && second==NULL)
+    {
+        /*get operand type*/
+        firstTP=checkType(first);
+        /*get sum of rows for operand*/
+        firstOpSum=opSumRow(firstTP);
+        if(firstOpSum==01){
+            printf("ERROR");
+            return 0;
+        }
+    }
+
+    if(second!=NULL)
+    {
+        secondTP=checkType(second);
+        secOpSum=opSumRow(secondTP);
+        if(secOpSum==-1) {
+            printf("ERROR");
+            return 0;
+        }
+    }
+
+    /*EDGE CASE - both registers*/
+    if(firstTP==Register && secondTP==Register)
+        secOpSum=0;
+
+    /*return sum:
+     * first operand
+     * second operand
+     * command*/
+    sumRows=firstOpSum+SecOpSum+1;
+    return sumRows;
 }
