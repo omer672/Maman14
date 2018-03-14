@@ -43,8 +43,10 @@ opType checkType(char *reqOp)
         /*r1..r9, check if 'r' 1st, digit 2nd, 2 chars word*/
     else if(*reqOp=='r' && isdigit(reqOp[1]) && strlen(reqOp)==2)
         operand=Register;
-    else
-        printf("ERROR");
+    else{
+        /*ERROR - second iteration, search symbol argument and implement into up if's*/
+        operand="-";
+        }
     return operand;
 }
 

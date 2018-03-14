@@ -200,7 +200,6 @@ StatusCode insertExtern(char* symbols)
 /* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
-    int IC;
     int instructionsArray[MAX_FILE_LENGTH];
     int sumL=0;
     int keepBin;//keep the binary num before insert to instruction array
@@ -213,40 +212,60 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     keepBin=searchOp(instruction);//will search the command and return its place(equals to his binary number)
     //insert 4 bits instruction binary to array
     instructionsArray[IC]=keepBin;
-    opType type;
-    type=checkType(firstOp);
-    keepBin= type;//get binary by enum place.
-    //insert 2 bits for source operand
-    instructionsArray[IC]=(instructionsArray[IC]<<2)+keepBin;
-    type=checkType(secondOp);
-    keepBin=type;
-    //insert 2 bits for destination operand
-    instructionsArray[IC]=(instructionsArray[IC]<<2)+keepBin;
-    //insert 2 bits for A/R/E - OMER, can implement this one?
-    instructionsArray[IC]=
-
-            IC+=sumL;//increases IC by the rows needed by the inserted command
+    opType typeOne,typeTwo;
+    typeOne=checkType(firstOp);
+    typeTwo=checkType(secondOp);
+    /*First iterate*/
+    if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
+    {
+        if (typeOne == '-' || typeTwo == '-')//unrecognized Symbol, enter '-'
+        {
+            instructionsArray[IC] = '-';//will return on second iteration
+            IC++;//increases IC by '1' and continue;
+        } else//casual operands
+        {
+            keepBin = typeOne;//get binary by enum place.
+            /*insert 2 bits for source operand*/
+            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
+            keepBin = typeTwo;
+            /**insert 2 bits for destination operand**/
+            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
+            /**insert 2 bits for A/R/E - OMER, can implement this one?**/
+            instructionsArray[IC] =
+            IC += sumL;//increases IC by the rows needed by the inserted command
+        }
+    }
+    /*Second iterate*/
+    else
+    {
+        if(instructionsArray[IC]=='-')
+        {
+            instructionsArray[IC]='0';
+            //Will find symbol on checkType function
+            keepBin = typeOne;//get binary by enum place.
+            /*insert 2 bits for source operand*/
+            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
+            keepBin = typeTwo;
+            /**insert 2 bits for destination operand**/
+            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
+            /**insert 2 bits for A/R/E - OMER, can implement this one?**/
+            instructionsArray[IC] =
+            IC += sumL;//increases IC by the rows needed by the inserted command
+        }
+        else//covered on first iterate
+            IC++;
+    }
 
     /*EDGE CASE ERROR - More than 2 operands at the same command*/
 
 
-    /*OMER - think IC need to be static/extern/part of the function? */
+
     /*to calculate L need to check how many rows the instruction will take*/
     /*Needed Functions
      * check operands type - checkType
      * check machine code the operand will take by his type - opSumRow
      * take the whole row and check how many rows will take - instSumRow
      * add instruction to array and increase by L - This func*/
-    /*First iterate*/
-    if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
-    {
-        /**/
 
 
-    }
-    /*Second iterate*/
-    else
-    {
-
-    }
 }
