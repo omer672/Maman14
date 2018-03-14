@@ -2,28 +2,28 @@
 
 Symbol* head = NULL;
 
-int isLegal(char* symbol)
+StatusCode isLegal(char* symbol)
 {
     unsigned int i;
     if(isalpha(symbol[0]) && strlen(symbol) <= MAX_SYMBOL_LEN)
     {
         for(i=1;i<strlen(symbol);i++)
             if(!isalnum(symbol[i]))
-                return 0;
+                return illigal_symbol_name;
         if(!isRegister(symbol) && !isInstuction(symbol) && !isDataType(symbol))
-            return 1;
+            return success;
     }
-    return 0;
+    return illigal_symbol_name;
 }
 
-int setSymbol(char* name,int value,char *mark, Types type)
+StatusCode setSymbol(char* name,int value,char *mark, Types type)
 {
-    if(!isLegal(name))
-        return 0;
+    if(isLegal(name) < 0)
+        return illigal_symbol_name;
     if(search(head,name))
-        return 0;
-    add(&head,name,value,mark,type);
-    return 1;
+        return redeclaration_of_symbol;
+    addSymbol(&head,name,value,mark,type);
+    return success;
 }
 
 Symbol* getHead()

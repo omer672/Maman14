@@ -4,4 +4,4 @@
 #include "fileCreator.h"
 #include "commandsToBinary.h"
 
-void secondIterate(FILE* file);
+void secondIterate(FILE* file, char *fileName);

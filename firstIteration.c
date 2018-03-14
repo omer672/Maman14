@@ -1,11 +1,12 @@
 #include "firstIteration.h"
 
-void iterate(FILE* file)
+void iterate(FILE* file, char* fileName)
 {
     int IC = 0;
     int DC = 0;
-    int errorsFound;
+    int errorsFound = 0;
     int i;     /*Auxiliary integers*/
+    StatusCode code;
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
     char* symbolPos;               /*Auxiliary pointer - to position of symbol*/
@@ -18,6 +19,12 @@ void iterate(FILE* file)
 
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
+        if(isWhitespace(lineBuffer) || (unsigned char)(*lineBuffer) == ';') /* Checking for empty line or comment line */
+        {
+            numberOfLines++;
+            break;
+        }
+
         strcpy(linebufferCopy,lineBuffer);
         command = strtok(lineBuffer,delimit);
         if(symbolPos = strchr(command,':'))   /*Checks if there is a symbol*/
@@ -33,34 +40,54 @@ void iterate(FILE* file)
             {
                 setSymbol(symbol,DC,"data",relocatable);
             }
-            insertData(command,restOfLine);
+            if((code = insertData(command,restOfLine)) < 0)
+            {
+                printError(code,numberOfLines,fileName);
+                errorsFound = 1;
+            }
         }
         else
         {
             if(isExtern(command) || isEntry(command)) /*Extern/Entry*/
             {
                 if(isExtern(command))
-                    insertExtern(restOfLine);
-                else
-                    ; /*TOOD: write it in entries file*/
+                    if((code = insertExtern(restOfLine)) < 0)
+                    {
+                        printError(code,numberOfLines,fileName);
+                        errorsFound = 1;
+                    }
             }
             else /*Instuction*/
             {
                 if(foundSymbol)
                 {
-                    setSymbol(symbol,IC,"",relocatable);
+                    if((code = setSymbol(symbol,IC,"",relocatable)) < 0)
+                    {
+                        printError(code,numberOfLines,fileName);
+                        errorsFound = 1;
+                    }
                 }
                 if(isInstuction(command))
-                    insertInstruction(command,restOfLine, 0);
+                {
+                    if((code = insertInstruction(command,restOfLine, 0)) < 0)
+                    {
+                        printError(code,numberOfLines,fileName);
+                        errorsFound = 1;
+                    }
+                }
+                else /* Unrecognized command */
+                {
+                    code = unrecognized_command;
+                    printError(code,numberOfLines,fileName);
+                    errorsFound = 1;
+                }
             }
         }
         numberOfLines++;
     }
-    if(numberOfLines == 0)
-        printf("Empty file, moving on");
     if(!errorsFound)
     {
         /*TODO: add IC to data symbols*/
-        secondIterate(file);
+        secondIterate(file, fileName);
     }
 }

@@ -1,6 +1,6 @@
 #include "secondIteration.h"
 
-void secondIterate(FILE* file)
+void secondIterate(FILE* file, char* fileName)
 {
     int IC = 0;
     int errorsFound;
@@ -15,6 +15,7 @@ void secondIterate(FILE* file)
     char lineBuffer[LINE_LENGTH];
     char linebufferCopy[LINE_LENGTH]; /*Copy of the line buffer because strtok destroys the string*/
     char value[MAX_DIGITS];
+    StatusCode code;
 
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
@@ -29,18 +30,26 @@ void secondIterate(FILE* file)
         {
             if(isEntry(command)) /*Entry*/
             {
-                markEntry(restOfLine);
+                if((code = markEntry(restOfLine)) < 0)
+                {
+                    printError(code,numberOfLines,fileName);
+                    errorsFound = 1;
+                }
             }
             else /*Instruction*/
             {
-                insertInstruction(command,restOfLine, 1);
+                if((code = insertInstruction(command,restOfLine, 1)) < 0)
+                {
+                    printError(code,numberOfLines,fileName);
+                    errorsFound = 1;
+                }
             }
         }
         numberOfLines++;
     }
     if(!errorsFound)
     {
-        createOutputFiles(""); /*TODO: get actual file names*/
+        createOutputFiles(fileName);
     }
 
 }

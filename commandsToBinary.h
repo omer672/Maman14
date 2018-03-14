@@ -3,4 +3,4 @@
 #include <ctype.h>
 
 
-void markEntry(char* symbol);
+StatusCode markEntry(char* symbol);

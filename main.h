@@ -16,7 +16,7 @@
 #define MAX_FILE_LENGTH 256
 #define EXTERN "extern"
 #define ENTRY "entry"
-
+/*TODO: FIX ALL STRCMP - when it returns 0 means both strings are equal */
 typedef enum type { external,relocatable } Types;
 typedef struct symbol
 {
@@ -26,6 +26,25 @@ typedef struct symbol
     Types type;
     struct symbol* next;
 } Symbol;
+
+typedef enum errorList {
+    success = 0,
+    wrong_number_of_operands = -1,
+    unrecognized_command = -2,
+    illigal_symbol_name = -3,
+    redeclaration_of_symbol = -4,
+    symbol_doesnt_exsist = -5,
+    data_syntex_error = -6,
+    string_syntex_error = -7,
+    struct_syntex_error = -8
+
+    /* Tal add any errors you need in this format (decsending numbers) */
+} StatusCode;
+
+typedef enum opCode { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } OpCodes;
+
+/*Im - 00, Direct=01, Struct=10, register=11*/
+typedef enum types { Immediate = 0, Direct, Struct, Register} opType;
 
 extern char* instructions[NUM_OF_INSTRUCTS];
 extern char* dataTypes[NUM_OF_DATA_TYPES];

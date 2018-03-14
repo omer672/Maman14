@@ -1,6 +1,6 @@
 #include "commandsToBinary.h"
 
-void markEntry(char* symbol)
+StatusCode markEntry(char* symbol)
 {
     Symbol* sym;
     int i = 0;
@@ -17,12 +17,7 @@ void markEntry(char* symbol)
         token = strtok(NULL,delimiter);
     }
     if(i!=1)
-    {
-        if(i==0)
-            /*ERROR : no openrands*/;
-        if(i>1)
-            /*ERROR : i opernands found,expected 1*/;
-    }
+        return wrong_number_of_operands;
     else
     {
         if((sym = doesExist(name)) != NULL)
@@ -30,10 +25,9 @@ void markEntry(char* symbol)
             sym->mark = ENTRY;
         }
         else
-        {
-            /* ERROR: symbol doesnt exist */
-        }
+            return symbol_doesnt_exsist;
     }
+    return success;
 }
 /*gets string operands and checks its type - imm, direct, struct, register*/
 opType checkType(char *reqOp)
@@ -112,16 +106,17 @@ int instSumRow(char *first, char *second)
      * first operand
      * second operand
      * command*/
-    sumRows=firstOpSum+SecOpSum+1;
+    sumRows=firstOpSum+secOpSum+1;
     return sumRows;
 }
 /*search the command, return his place(equals to his binary 4 bits)*/
 int searchOp(char* opCode)
 {
     int i=0;
+    int found = -1;
     while(i!=16)
     {
-        if(strcmp(opCode,opCodes[i])==0) {
+        if(strcmp(opCode,instructions[i])==0) {
             found = i;
             return found;
         }
