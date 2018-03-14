@@ -73,6 +73,7 @@ StatusCode insertTypeData(char* dataToInsert)
     int j;
     char* token;
     char line[strlen(dataToInsert)];
+    
 
     if(isWhitespace(dataToInsert))
         return wrong_number_of_operands;

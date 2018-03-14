@@ -91,3 +91,4 @@ void iterate(FILE* file, char* fileName)
         secondIterate(file, fileName);
     }
 }
+
