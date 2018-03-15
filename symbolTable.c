@@ -16,13 +16,13 @@ StatusCode isLegal(char* symbol)
     return illigal_symbol_name;
 }
 
-StatusCode setSymbol(char* name,int value,int wasGivenAtData,int isEntry, Types type)
+StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types type)
 {
     if(isLegal(name) < 0)
         return illigal_symbol_name;
     if(search(head,name))
         return redeclaration_of_symbol;
-    addSymbol(&head,name,value,wasGivenAtData,isEntry,type);
+    addSymbol(&head,name,value,sType,isEntry,type);
     return success;
 }
 
@@ -41,7 +41,7 @@ void updateDataSymbolValues(int value)
     Symbol* curr = head;
     while(curr)
     {
-        if(curr->wasGivenAtData)
+        if(curr->symbolType != tCode) /* Meaning was given as a data type */
             curr->value+=value;
     }
 }

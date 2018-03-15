@@ -5,7 +5,7 @@ Symbol* alloc()
     return (Symbol*)malloc(sizeof(Symbol));
 }
 
-void addSymbol(Symbol** head,char* name,int value,int wasGivenAtData,int isEntry,Types type)
+void addSymbol(Symbol** head,char* name,int value,SymbolType sType,int isEntry,Types type)
 {
     Symbol* curr;
     if(*head == NULL)
@@ -13,7 +13,7 @@ void addSymbol(Symbol** head,char* name,int value,int wasGivenAtData,int isEntry
         *head = alloc();
         strcpy((*head)->name,name);
         (*head)->value = value;
-        (*head)->wasGivenAtData = wasGivenAtData;
+        (*head)->symbolType = sType;
         (*head)->isEntry = isEntry;
         (*head)->type = type;
         (*head)->next = NULL;
@@ -26,7 +26,7 @@ void addSymbol(Symbol** head,char* name,int value,int wasGivenAtData,int isEntry
         curr->next = alloc();
         strcpy(curr->next->name,name);
         curr->next->value = value;
-        curr->next->wasGivenAtData = wasGivenAtData;
+        curr->next->symbolType = sType;
         curr->next->isEntry = isEntry;
         curr->next->type = type;
         curr->next->next = NULL;

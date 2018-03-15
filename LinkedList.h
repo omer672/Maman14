@@ -1,4 +1,4 @@
 #include "main.h"
 
-void addSymbol(Symbol** head,char* name,int value,int wasGivenAtData, int isEntry, Types type);
+void addSymbol(Symbol** head,char* name,int value,SymbolType sType, int isEntry, Types type);
 Symbol *search(Symbol* head, char* name);

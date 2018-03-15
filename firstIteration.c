@@ -18,6 +18,7 @@ void iterate(FILE* file, char* fileName)
 {
     int errorsFound = 0;
     StatusCode code;
+    SymbolType sType;
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
     char* symbolPos;               /*Auxiliary pointer - to position of symbol*/
@@ -51,7 +52,17 @@ void iterate(FILE* file, char* fileName)
         {
             if(foundSymbol)
             {
-                setSymbol(symbol,DC,1,0,relocatable);
+                if(strcmp(command,dataTypes[0]) == 0) /* .data */
+                    sType = tData;
+                else if(strcmp(command,dataTypes[1]) == 0) /* .string */
+                    sType = tString;
+                else /* .struct */
+                    sType = tStruct;
+                if((code = setSymbol(symbol,DC,sType,0,relocatable)) < 0)
+                {
+                    printError(code,numberOfLines,fileName);
+                    errorsFound = 1;
+                }
             }
             if((code = insertData(command,restOfLine)) < 0)
             {
@@ -74,7 +85,7 @@ void iterate(FILE* file, char* fileName)
             {
                 if(foundSymbol)
                 {
-                    if((code = setSymbol(symbol,IC,0,0,relocatable)) < 0)
+                    if((code = setSymbol(symbol,IC,tCode,0,relocatable)) < 0)
                     {
                         printError(code,numberOfLines,fileName);
                         errorsFound = 1;

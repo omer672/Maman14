@@ -175,7 +175,7 @@ StatusCode insertExtern(char* symbols)
 
     if(sscanf(symbols,"%s %s",first,second) == 1) /* Used to check if there is more than 1 operand */
     {
-        return setSymbol(first, 0,0,0, external);
+        return setSymbol(first, 0,tCode,0, external);
     }
     else
     {

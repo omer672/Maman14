@@ -6,7 +6,7 @@
 #include "helper.h"
 #include <ctype.h>
 
-StatusCode setSymbol(char* name,int value,int wasGivenAtData,int isEntry, Types type);
+StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types type);
 Symbol* getHead();
 Symbol* doesExist(char* name);
 void updateDataSymbolValues(int value);

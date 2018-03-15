@@ -20,11 +20,12 @@
 /*TODO: FIX ALL STRCMP - when it returns 0 means both strings are equal */
 
 typedef enum type { external,relocatable } Types;
+typedef enum symbolType { tCode, tData, tString, tStruct } SymbolType;
 typedef struct symbol
 {
     char name[MAX_SYMBOL_LEN];
     int value;
-    int wasGivenAtData;
+    int symbolType;
     int isEntry;
     Types type;
     struct symbol* next;
