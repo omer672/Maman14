@@ -16,13 +16,13 @@ StatusCode isLegal(char* symbol)
     return illigal_symbol_name;
 }
 
-StatusCode setSymbol(char* name,int value,char *mark, Types type)
+StatusCode setSymbol(char* name,int value,int wasGivenAtData,int isEntry, Types type)
 {
     if(isLegal(name) < 0)
         return illigal_symbol_name;
     if(search(head,name))
         return redeclaration_of_symbol;
-    addSymbol(&head,name,value,mark,type);
+    addSymbol(&head,name,value,wasGivenAtData,isEntry,type);
     return success;
 }
 
@@ -34,5 +34,25 @@ Symbol* getHead()
 Symbol* doesExist(char* name)
 {
     return search(head,name);
+}
+
+void updateDataSymbolValues(int value)
+{
+    Symbol* curr = head;
+    while(curr)
+    {
+        if(curr->wasGivenAtData)
+            curr->value+=value;
+    }
+}
+
+void freeSymbolTable()
+{
+    Symbol* curr;
+    while ((curr = head) != NULL)
+    {
+        head = head->next;
+        free(curr);
+    }
 }
 

@@ -16,13 +16,16 @@
 #define MAX_FILE_LENGTH 256
 #define EXTERN "extern"
 #define ENTRY "entry"
+
 /*TODO: FIX ALL STRCMP - when it returns 0 means both strings are equal */
+
 typedef enum type { external,relocatable } Types;
 typedef struct symbol
 {
-    char* name;
+    char name[MAX_SYMBOL_LEN];
     int value;
-    char* mark;
+    int wasGivenAtData;
+    int isEntry;
     Types type;
     struct symbol* next;
 } Symbol;
@@ -33,10 +36,10 @@ typedef enum errorList {
     unrecognized_command = -2,
     illigal_symbol_name = -3,
     redeclaration_of_symbol = -4,
-    symbol_doesnt_exsist = -5,
-    data_syntex_error = -6,
-    string_syntex_error = -7,
-    struct_syntex_error = -8
+    symbol_doesnt_exist = -5,
+    data_syntax_error = -6,
+    string_syntax_error = -7,
+    struct_syntax_error = -8
 
     /* Tal add any errors you need in this format (decsending numbers) */
 } StatusCode;
@@ -53,6 +56,7 @@ extern int dataArray[MAX_FILE_LENGTH];
 extern int instructionsArray[MAX_FILE_LENGTH];
 extern int DC,IC;
 extern int errorsFound;
+
 void runProg(char* fileName);
 
 #endif

@@ -5,15 +5,16 @@ Symbol* alloc()
     return (Symbol*)malloc(sizeof(Symbol));
 }
 
-void addSymbol(Symbol** head,char* name,int value,char* mark,Types type)
+void addSymbol(Symbol** head,char* name,int value,int wasGivenAtData,int isEntry,Types type)
 {
     Symbol* curr;
     if(*head == NULL)
     {
         *head = alloc();
-        (*head)->name = name;
+        strcpy((*head)->name,name);
         (*head)->value = value;
-        (*head)->mark = mark;
+        (*head)->wasGivenAtData = wasGivenAtData;
+        (*head)->isEntry = isEntry;
         (*head)->type = type;
         (*head)->next = NULL;
     }
@@ -23,9 +24,10 @@ void addSymbol(Symbol** head,char* name,int value,char* mark,Types type)
         while(curr->next)
             curr = curr->next;
         curr->next = alloc();
-        curr->next->name = name;
+        strcpy(curr->next->name,name);
         curr->next->value = value;
-        curr->next->mark = mark;
+        curr->next->wasGivenAtData = wasGivenAtData;
+        curr->next->isEntry = isEntry;
         curr->next->type = type;
         curr->next->next = NULL;
     }
@@ -36,7 +38,7 @@ Symbol* search(Symbol* head, char* name)
     Symbol* curr = head;
     while(curr)
     {
-        if(strcmp(curr->name,name))
+        if(strcmp(curr->name,name) == 0)
             return curr;
     }
     return NULL;

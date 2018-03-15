@@ -1,11 +1,22 @@
 #include "firstIteration.h"
 
+void clearGlobals()
+{
+    int i;
+    for(i=0;i<MAX_FILE_LENGTH;i++)
+    {
+        dataArray[i] = 0;
+        instructionsArray[i] = 0;
+    }
+    DC = 0;
+    IC = 0;
+    errorsFound = 0;
+    freeSymbolTable();
+}
+
 void iterate(FILE* file, char* fileName)
 {
-    int IC = 0;
-    int DC = 0;
     int errorsFound = 0;
-    int i;     /*Auxiliary integers*/
     StatusCode code;
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
@@ -17,6 +28,8 @@ void iterate(FILE* file, char* fileName)
     char lineBuffer[LINE_LENGTH];
     char linebufferCopy[LINE_LENGTH]; /*Copy of the line buffer because strtok destroys the string*/
 
+    IC = 0;
+    DC = 0;
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
         if(isWhitespace(lineBuffer) || (unsigned char)(*lineBuffer) == ';') /* Checking for empty line or comment line */
@@ -27,7 +40,7 @@ void iterate(FILE* file, char* fileName)
 
         strcpy(linebufferCopy,lineBuffer);
         command = strtok(lineBuffer,delimit);
-        if(symbolPos = strchr(command,':'))   /*Checks if there is a symbol*/
+        if((symbolPos = strchr(command,':')) != NULL)   /*Checks if there is a symbol*/
         {
             symbol = strtok(command,":");
             foundSymbol = 1;
@@ -38,7 +51,7 @@ void iterate(FILE* file, char* fileName)
         {
             if(foundSymbol)
             {
-                setSymbol(symbol,DC,"data",relocatable);
+                setSymbol(symbol,DC,1,0,relocatable);
             }
             if((code = insertData(command,restOfLine)) < 0)
             {
@@ -61,7 +74,7 @@ void iterate(FILE* file, char* fileName)
             {
                 if(foundSymbol)
                 {
-                    if((code = setSymbol(symbol,IC,"",relocatable)) < 0)
+                    if((code = setSymbol(symbol,IC,0,0,relocatable)) < 0)
                     {
                         printError(code,numberOfLines,fileName);
                         errorsFound = 1;
@@ -87,8 +100,7 @@ void iterate(FILE* file, char* fileName)
     }
     if(!errorsFound)
     {
-        /*TODO: add IC to data symbols*/
+        updateDataSymbolValues(IC); /* add the value of IC to the symbols given at "data" part */
         secondIterate(file, fileName);
     }
 }
-

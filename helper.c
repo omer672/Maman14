@@ -66,13 +66,11 @@ int isString(char* string)
 
 StatusCode insertTypeData(char* dataToInsert)
 {
-    int DC;
-    int dataArray[MAX_FILE_LENGTH];
     int tempDataArray[MAX_FILE_LENGTH];
     int i = 0;
     int j;
     char* token;
-    char line[strlen(dataToInsert)];
+    char line[MAX_FILE_LENGTH];
     
 
     if(isWhitespace(dataToInsert))
@@ -85,7 +83,7 @@ StatusCode insertTypeData(char* dataToInsert)
         if(isInt(token)) /* Every token is suppose to contain one integer */
             tempDataArray[i] = atoi(token);
         else
-            return data_syntex_error;
+            return data_syntax_error;
         token = strtok(NULL, ",");
         i++;
     }
@@ -99,14 +97,11 @@ StatusCode insertTypeData(char* dataToInsert)
 
 StatusCode insertTypeString(char* dataToInsert)
 {
-    int DC;
-    int dataArray[MAX_FILE_LENGTH];
-
     char actualString[MAX_FILE_LENGTH];
     int i;
     int count = 0;
     char *token;
-    char line[strlen(dataToInsert)];
+    char line[MAX_FILE_LENGTH];
 
     if(isWhitespace(dataToInsert))
         return wrong_number_of_operands;
@@ -116,7 +111,7 @@ StatusCode insertTypeString(char* dataToInsert)
     while (token != NULL)
     {
         if(strcmp(token,dataToInsert) == 0) /* Meaning no token were found, hence no " was found */
-            return string_syntex_error;
+            return string_syntax_error;
         if (!isWhitespace (token)) /* seperate strings by ", and if the token isn't empty it means we found an actual string */
         {
             strcpy (actualString, token);
@@ -125,7 +120,7 @@ StatusCode insertTypeString(char* dataToInsert)
         token = strtok (NULL, "\"");
     }
     if (count != 1) /* Meaning no strings were found or more than 1 string was found */
-        return string_syntex_error;
+        return string_syntax_error;
 
     /*INESRT chars to array*/
     for(i=0;i<strlen(actualString);i++,DC++)
@@ -139,39 +134,30 @@ StatusCode insertTypeString(char* dataToInsert)
 
 StatusCode insertTypeStruct(char* dataToInsert)
 {
-    StatusCode code;
-    int count = 0;
     char* token;
-    char line[strlen(dataToInsert)];
+    char line[MAX_FILE_LENGTH];
 
     strcpy(line,dataToInsert); /* strtok ruins the string */
     token = strtok(line, ",");
-    while (token != NULL) /* TODO: make sure string can't contain ',' or find a new way to implement */
-    {
-        if(count == 0) /* First token should be a number */
-        {
-            if((code = insertTypeData(token)) < 0)
-                return code;
-        }
-        else if(count > 2) /* Only two tokens expected */
-            return struct_syntex_error;
-        count++;
-        token = strtok (NULL, ",");
-    }
+
+    if(insertTypeData(token) < 0) /* First token should be a number */
+        return struct_syntax_error;
+
+    token = strtok(NULL,""); /* Get the rest of the string */
 
     /* At this point token should be a string */
-    if((code = insertTypeString(token)) < 0)
-        return code;
+    if(insertTypeString(token) < 0)
+        return struct_syntax_error;
     return success;
 }
 
 StatusCode insertData(char* type, char* data)
 {
-    if (strcmp(type, dataTypes[0]))
+    if (strcmp(type, dataTypes[0]) == 0)
     { /* .data */
         return insertTypeData(data);
     }
-    else if (strcmp(type, dataTypes[1]))
+    else if (strcmp(type, dataTypes[1]) == 0)
     { /* .string */
         return insertTypeString(data);
     }
@@ -184,12 +170,12 @@ StatusCode insertData(char* type, char* data)
 StatusCode insertExtern(char* symbols)
 {
     /*got extern - uses functions from Symbol table and linkedList*/
-    char first[strlen(symbols)];
-    char second[strlen(symbols)];
+    char first[MAX_FILE_LENGTH];
+    char second[MAX_FILE_LENGTH];
 
     if(sscanf(symbols,"%s %s",first,second) == 1) /* Used to check if there is more than 1 operand */
     {
-        return setSymbol(first, 0, "extern", external);
+        return setSymbol(first, 0,0,0, external);
     }
     else
     {
@@ -201,7 +187,6 @@ StatusCode insertExtern(char* symbols)
 /* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
-    int instructionsArray[MAX_FILE_LENGTH];
     int sumL=0;
     int keepBin;//keep the binary num before insert to instruction array
     char* firstOp, secondOp;
@@ -233,7 +218,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /**insert 2 bits for A/R/E - OMER, can implement this one?**/
             instructionsArray[IC] =
-            IC += sumL;//increases IC by the rows needed by the inserted command
+                    IC += sumL;//increases IC by the rows needed by the inserted command
         }
     }
     /*Second iterate*/
@@ -251,7 +236,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /**insert 2 bits for A/R/E - OMER, can implement this one?**/
             instructionsArray[IC] =
-            IC += sumL;//increases IC by the rows needed by the inserted command
+                    IC += sumL;//increases IC by the rows needed by the inserted command
         }
         else//covered on first iterate
             IC++;

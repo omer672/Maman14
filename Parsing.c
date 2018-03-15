@@ -64,7 +64,7 @@ int TwosComplements(int number)
         ArrI--;
     }
 
-/* Switch all ones to zeros and all zeros to ones in binary number presented by array of integers(0 or 1)
+    /* Switch all ones to zeros and all zeros to ones in binary number presented by array of integers(0 or 1)
  * But start switching only after first non zero bit(1)
  * Example 1010 --> 0110*/
     for(ArrI = 9;ArrI >= 0;ArrI--)
@@ -74,12 +74,12 @@ int TwosComplements(int number)
         {
             numArray[ArrI] = 0;
         }
-            /*If number equal to 0 and not first*/
+        /*If number equal to 0 and not first*/
         else if(numArray[ArrI] == 0 && sumOne == 1)
         {
             numArray[ArrI] = 1;
         }
-            /*If number equal to 1 and first one*/
+        /*If number equal to 1 and first one*/
         else if(numArray[ArrI] == 1 && sumOne == 0)
         {
             sumOne++;
@@ -116,7 +116,7 @@ int TwosComplements(int number)
 /*the function takes binary number(integer) to base 32 number in letters(!,@,#...,v)
  * the func will get integer binary number
  * the func will return array of characters by strange base 32*/
-char* ConvertBinTo32(int number)
+void ConvertBinTo32(int number, char* newNumber)
 {
     /*Define auxiliary integers*/
     int number_copy;
@@ -135,18 +135,15 @@ char* ConvertBinTo32(int number)
         temp=number_copy % base;
         number_copy=number_copy / base;
         count++;
-    }
+    }    while(number_copy!=0);
 
-    while(number_copy!=0);
-    {
-        /* Allocate memory to array*/
-        numArray = malloc(count * sizeof(int));
-    }
+    /* Allocate memory to array*/
+    numArray = malloc(count * sizeof(int));
 
     if(numArray == NULL)
     {
         fprintf(stderr,"Failed to allocate memory for a new integer array");
-        return 0;
+        return;
     }
 
     /*Convert binary number to base 32(as defined up)*/
@@ -162,7 +159,7 @@ char* ConvertBinTo32(int number)
     if((reqBase= malloc(count * sizeof(char)))==NULL)
     {
         fprintf(stderr,"Failed to allocate memory for a new integer array");
-        return 0;
+        return;
     }
 
     j=0;
@@ -175,171 +172,173 @@ char* ConvertBinTo32(int number)
     {
         switch(numArray[i])
         {
-            case 0:
-                reqBase[j]='!';
-                j++;
-                i--;
-                break;
-            case 1:
-                reqBase[j]='@';
-                j++;
-                i--;
-                break;
-            case 2:
-                reqBase[j]='#';
-                j++;
-                i--;
-                break;
-            case 3:
-                reqBase[j]='$';
-                j++;
-                i--;
-                break;
-            case 4:
-                reqBase[j]='%';
-                j++;
-                i--;
-                break;
-            case 5:
-                reqBase[j]='^';
-                j++;
-                i--;
-                break;
-            case 6:
-                reqBase[j]='&';
-                j++;
-                i--;
-                break;
-            case 7:
-                reqBase[j]='*';
-                j++;
-                i--;
-                break;
-            case 8:
-                reqBase[j]='<';
-                j++;
-                i--;
-                break;
-            case 9:
-                reqBase[j]='>';
-                j++;
-                i--;
-                break;
-            case 10:
-                reqBase[j]='a';
-                j++;
-                i--;
-                break;
-            case 11:
-                reqBase[j]='b';
-                j++;
-                i--;
-                break;
-            case 12:
-                reqBase[j]='c';
-                j++;
-                i--;
-                break;
-            case 13:
-                reqBase[j]='d';
-                j++;
-                i--;
-                break;
-            case 14:
-                reqBase[j]='e';
-                j++;
-                i--;
-                break;
-            case 15:
-                reqBase[j]='f';
-                j++;
-                i--;
-                break;
-            case 16:
-                reqBase[j]='g';
-                j++;
-                i--;
-                break;
-            case 17:
-                reqBase[j]='h';
-                j++;
-                i--;
-                break;
-            case 18:
-                reqBase[j]='i';
-                j++;
-                i--;
-                break;
-            case 19:
-                reqBase[j]='j';
-                j++;
-                i--;
-                break;
-            case 20:
-                reqBase[j]='k';
-                j++;
-                i--;
-                break;
-            case 21:
-                reqBase[j]='l';
-                j++;
-                i--;
-                break;
-            case 22:
-                reqBase[j]='m';
-                j++;
-                i--;
-                break;
-            case 23:
-                reqBase[j]='n';
-                j++;
-                i--;
-                break;
-            case 24:
-                reqBase[j]='o';
-                j++;
-                i--;
-                break;
-            case 25:
-                reqBase[j]='p';
-                j++;
-                i--;
-                break;
-            case 26:
-                reqBase[j]='q';
-                j++;
-                i--;
-                break;
-            case 27:
-                reqBase[j]='r';
-                j++;
-                i--;
-                break;
-            case 28:
-                reqBase[j]='s';
-                j++;
-                i--;
-                break;
-            case 29:
-                reqBase[j]='t';
-                j++;
-                i--;
-                break;
-            case 30:
-                reqBase[j]='u';
-                j++;
-                i--;
-                break;
-            case 31:
-                reqBase[j]='v';
-                j++;
-                i--;
-                break;
-            default:
-                fprintf(stderr,"Wrong number\n");
-                break;
+        case 0:
+            reqBase[j]='!';
+            j++;
+            i--;
+            break;
+        case 1:
+            reqBase[j]='@';
+            j++;
+            i--;
+            break;
+        case 2:
+            reqBase[j]='#';
+            j++;
+            i--;
+            break;
+        case 3:
+            reqBase[j]='$';
+            j++;
+            i--;
+            break;
+        case 4:
+            reqBase[j]='%';
+            j++;
+            i--;
+            break;
+        case 5:
+            reqBase[j]='^';
+            j++;
+            i--;
+            break;
+        case 6:
+            reqBase[j]='&';
+            j++;
+            i--;
+            break;
+        case 7:
+            reqBase[j]='*';
+            j++;
+            i--;
+            break;
+        case 8:
+            reqBase[j]='<';
+            j++;
+            i--;
+            break;
+        case 9:
+            reqBase[j]='>';
+            j++;
+            i--;
+            break;
+        case 10:
+            reqBase[j]='a';
+            j++;
+            i--;
+            break;
+        case 11:
+            reqBase[j]='b';
+            j++;
+            i--;
+            break;
+        case 12:
+            reqBase[j]='c';
+            j++;
+            i--;
+            break;
+        case 13:
+            reqBase[j]='d';
+            j++;
+            i--;
+            break;
+        case 14:
+            reqBase[j]='e';
+            j++;
+            i--;
+            break;
+        case 15:
+            reqBase[j]='f';
+            j++;
+            i--;
+            break;
+        case 16:
+            reqBase[j]='g';
+            j++;
+            i--;
+            break;
+        case 17:
+            reqBase[j]='h';
+            j++;
+            i--;
+            break;
+        case 18:
+            reqBase[j]='i';
+            j++;
+            i--;
+            break;
+        case 19:
+            reqBase[j]='j';
+            j++;
+            i--;
+            break;
+        case 20:
+            reqBase[j]='k';
+            j++;
+            i--;
+            break;
+        case 21:
+            reqBase[j]='l';
+            j++;
+            i--;
+            break;
+        case 22:
+            reqBase[j]='m';
+            j++;
+            i--;
+            break;
+        case 23:
+            reqBase[j]='n';
+            j++;
+            i--;
+            break;
+        case 24:
+            reqBase[j]='o';
+            j++;
+            i--;
+            break;
+        case 25:
+            reqBase[j]='p';
+            j++;
+            i--;
+            break;
+        case 26:
+            reqBase[j]='q';
+            j++;
+            i--;
+            break;
+        case 27:
+            reqBase[j]='r';
+            j++;
+            i--;
+            break;
+        case 28:
+            reqBase[j]='s';
+            j++;
+            i--;
+            break;
+        case 29:
+            reqBase[j]='t';
+            j++;
+            i--;
+            break;
+        case 30:
+            reqBase[j]='u';
+            j++;
+            i--;
+            break;
+        case 31:
+            reqBase[j]='v';
+            j++;
+            i--;
+            break;
+        default:
+            fprintf(stderr,"Wrong number\n");
+            break;
         }
     }
 
-    return reqBase;
+    strcpy(newNumber,reqBase);
+    free(reqBase);
+    free(numArray);
 }

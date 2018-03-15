@@ -10,5 +10,5 @@ int TwosComplements(int number);
 /*the function takes binary number(integer) to base 32 number in letters(!,@,#...,v)
  * the func will get integer binary number
  * the func will return array of characters by strange base 32*/
-char* ConvertBinTo32(int number);
+void ConvertBinTo32(int number, char* newNumber);
 

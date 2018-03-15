@@ -3,28 +3,28 @@
 void createObjFile(char *fileName)
 {
     int i;
-    int IC,DC;
     int dataArray[MAX_FILE_LENGTH];
     int instructionsArray[MAX_FILE_LENGTH];
     char lineBuffer[5];
-    char* code, address;
-    char finalFileName[strlen(fileName)+3];
+    char code[2];
+    char address[2];
+    char finalFileName[MAX_FILE_LENGTH+3];
     FILE* file;
     strcat(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ob");
-    if(file = fopen(finalFileName ,"w"))
+    if((file = fopen(finalFileName ,"w")) != NULL)
     {
         for(i = 0; i< IC; i++)
         {
-            code = ConvertBinTo32(instructionsArray[i]);
-            address = ConvertBinTo32(START_ADDRESS+i);
+            ConvertBinTo32(instructionsArray[i],code);
+            ConvertBinTo32(START_ADDRESS+i,address);
             sprintf(lineBuffer,"%s\t%s",address,code);
             fputs(lineBuffer,file);
         }
         for(i = 0; i< DC; i++)
         {
-            code = ConvertBinTo32(dataArray[i]);
-            address = ConvertBinTo32(START_ADDRESS+i+IC);
+            ConvertBinTo32(dataArray[i],code);
+            ConvertBinTo32(START_ADDRESS+i+IC,address);
             sprintf(lineBuffer,"%s\t%s",address,code);
             fputs(lineBuffer,file);
         }
@@ -39,14 +39,15 @@ void createObjFile(char *fileName)
 void createExternFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
-    char* address,name;
-    char finalFileName[strlen(fileName)+4];
+    char* name;
+    char address[2];
+    char finalFileName[MAX_FILE_LENGTH+4];
     Symbol* head;
     Symbol* curr;
     FILE* file;
     strcat(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ext");
-    if(file = fopen(finalFileName ,"w"))
+    if((file = fopen(finalFileName ,"w")) != NULL)
     {
         head = getHead();
         curr = head;
@@ -55,7 +56,7 @@ void createExternFile(char *fileName)
             if(curr->type == external)
             {
                 name = curr->name;
-                address = ConvertBinTo32(curr->value);
+                ConvertBinTo32(curr->value,address);
                 sprintf(lineBuffer,"%s\t%s",name,address);
                 fputs(lineBuffer,file);
             }
@@ -72,23 +73,24 @@ void createExternFile(char *fileName)
 void createEntryFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
-    char* address,name;
-    char finalFileName[strlen(fileName)+4];
+    char* name;
+    char address[2];
+    char finalFileName[MAX_FILE_LENGTH+4];
     Symbol* head;
     Symbol* curr;
     FILE* file;
     strcat(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ent");
-    if(file = fopen(finalFileName ,"w"))
+    if((file = fopen(finalFileName ,"w")) != NULL)
     {
         head = getHead();
         curr = head;
         while(curr)
         {
-            if(strcmp(curr->mark,ENTRY))
+            if(curr->isEntry)
             {
                 name = curr->name;
-                address = ConvertBinTo32(curr->value);
+                ConvertBinTo32(curr->value,address);
                 sprintf(lineBuffer,"%s\t%s",name,address);
                 fputs(lineBuffer,file);
             }

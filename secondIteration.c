@@ -2,7 +2,7 @@
 
 void secondIterate(FILE* file, char* fileName)
 {
-    int IC = 0;
+    IC = 0;
     int errorsFound;
     int i;     /*Auxiliary integers*/
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
@@ -21,7 +21,7 @@ void secondIterate(FILE* file, char* fileName)
     {
         strcpy(linebufferCopy,lineBuffer);
         command = strtok(lineBuffer,delimit);
-        if(symbolPos = strchr(command,':'))   /*Checks if there is a symbol*/
+        if((symbolPos = strchr(command,':')) != NULL)   /*Checks if there is a symbol*/
         {
             command = strtok(NULL,delimit); /*Should contain instruction/data command*/
             restOfLine = strtok(NULL,""); /*Gets the rest of the line*/

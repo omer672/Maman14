@@ -22,10 +22,10 @@ StatusCode markEntry(char* symbol)
     {
         if((sym = doesExist(name)) != NULL)
         {
-            sym->mark = ENTRY;
+            sym->isEntry = 1;
         }
         else
-            return symbol_doesnt_exsist;
+            return symbol_doesnt_exist;
     }
     return success;
 }
@@ -33,7 +33,7 @@ StatusCode markEntry(char* symbol)
 opType checkType(char *reqOp)
 {
     opType operand;
-    if(reqOp[0]=="#"){
+    if(reqOp[0]=='#'){
         operand=Immediate;}
         /*label? to check if symbols need to be part of the func*/
     else if(doesExist(reqOp)){
@@ -45,7 +45,7 @@ opType checkType(char *reqOp)
         operand=Register;
     else{
         /*ERROR - second iteration, search symbol argument and implement into up if's*/
-        operand="-";
+        operand='-';
         }
     return operand;
 }
