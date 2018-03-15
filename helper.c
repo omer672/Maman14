@@ -197,7 +197,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     sumL=instSumRow(firstOp,secondOp);//Sum of rows - to IC
     keepBin=searchOp(instruction);//will search the command and return its place(equals to his binary number)
     //insert 4 bits instruction binary to array
-    instructionsArray[IC]=keepBin;
+    instructionsArray[IC]=(int)keepBin;
     opType typeOne,typeTwo;
     typeOne=checkType(firstOp);
     typeTwo=checkType(secondOp);
@@ -216,14 +216,24 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             keepBin = typeTwo;
             /**insert 2 bits for destination operand**/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            /**insert 2 bits for A/R/E - OMER, can implement this one?**/
-            instructionsArray[IC] =
-                    IC += sumL;//increases IC by the rows needed by the inserted command
+            /*shift left 2 bits for A/R/E - first iterate, will place 00 end of command*/
+            instructionsArray[IC] = 0<<2;
+            IC += sumL;//increases IC by the rows needed by the inserted command
         }
     }
     /*Second iterate*/
+
+
+
     else
     {
+        Symbol* op1, *op2;
+        if(doesExist(firstOp))
+            op1=doesExist(firstOp);
+        if(doesExist(secondOp))
+            op2=doesExist(secondOp);
+        int opType1=op1->type;
+        int opType2=op2->type;
         if(instructionsArray[IC]=='-')
         {
             instructionsArray[IC]='0';
@@ -235,7 +245,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             /**insert 2 bits for destination operand**/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /**insert 2 bits for A/R/E - OMER, can implement this one?**/
-            instructionsArray[IC] =
+            instructionsArray[IC] = (instructionsArray[IC] << 2) +opType1;
                     IC += sumL;//increases IC by the rows needed by the inserted command
         }
         else//covered on first iterate
