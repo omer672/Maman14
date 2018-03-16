@@ -25,7 +25,7 @@ typedef struct symbol
 {
     char name[MAX_SYMBOL_LEN];
     int value;
-    int symbolType;
+    SymbolType symbolType;
     int isEntry;
     Types type;
     struct symbol* next;

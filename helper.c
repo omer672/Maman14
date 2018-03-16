@@ -1,4 +1,5 @@
 #include "helper.h"
+#include "commandsToBinary.c"
 
 int searchStringInArray(char* array[],int length, char* string)
 {
@@ -222,9 +223,6 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
         }
     }
     /*Second iterate*/
-
-
-
     else
     {
         Symbol* op1, *op2;
@@ -232,8 +230,11 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             op1=doesExist(firstOp);
         if(doesExist(secondOp))
             op2=doesExist(secondOp);
-        int opType1=op1->type;
-        int opType2=op2->type;
+        SymbolType opType1=op1->symbolType;
+        SymbolType opType2=op2->symbolType;
+        typeOne=checkTypeSecIter(opType1);
+        typeTwo=checkTypeSecIter(opType2);
+
         if(instructionsArray[IC]=='-')
         {
             instructionsArray[IC]='0';
@@ -251,11 +252,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
         else//covered on first iterate
             IC++;
     }
-
     /*EDGE CASE ERROR - More than 2 operands at the same command*/
-
-
-
     /*to calculate L need to check how many rows the instruction will take*/
     /*Needed Functions
      * check operands type - checkType

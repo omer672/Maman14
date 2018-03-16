@@ -41,12 +41,21 @@ opType checkType(char *reqOp)
     else if(isdigit(reqOp[0])&&reqOp[1]==','){
         operand=Struct;}
         /*r1..r9, check if 'r' 1st, digit 2nd, 2 chars word*/
-    else if(*reqOp=='r' && isdigit(reqOp[1]) && strlen(reqOp)==2)
+    else if(isRegister(reqOp))
         operand=Register;
     else{
         /*ERROR - second iteration, search symbol argument and implement into up if's*/
         operand='-';
         }
+    return operand;
+}
+opType checkTypeSecIter(SymbolType num)
+{
+    opType operand;
+    if(num==tData || num==tCode || num==tString)
+        operand=Direct;
+    else if(num==tStruct)
+        operand=Struct;
     return operand;
 }
 

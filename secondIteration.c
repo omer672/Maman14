@@ -1,4 +1,5 @@
 #include "secondIteration.h"
+#include "fileCreator.c"
 
 void secondIterate(FILE* file, char* fileName)
 {

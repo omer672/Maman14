@@ -1,4 +1,5 @@
 #include "firstIteration.h"
+#include "errorPrinter.c"
 
 void clearGlobals()
 {
