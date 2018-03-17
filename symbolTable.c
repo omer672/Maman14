@@ -1,7 +1,9 @@
 #include "symbolTable.h"
 
 Symbol* head = NULL;
-
+/*The function gets pointer to symbol and checks if the name is legal.
+ * Case legal - success
+ * case illegal - returns error*/
 StatusCode isLegal(char* symbol)
 {
     unsigned int i;
@@ -16,6 +18,7 @@ StatusCode isLegal(char* symbol)
     return illigal_symbol_name;
 }
 
+/*The function gets new symbol variables and checks if legal. case legal - adds a new symbol. else - prints error*/
 StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types type)
 {
     printf("setSymbol, symbol: %s\n",name);
@@ -26,12 +29,15 @@ StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types ty
     addSymbol(&head,name,value,sType,isEntry,type);
     return success;
 }
-
+/*The function returns the head of symbols list*/
 Symbol* getHead()
 {
     return head;
 }
 
+/*The function gets name of symbol and search if its already exists on symbol list
+ * Input: symbol name
+ * Output: pointer to symbol of found*/
 Symbol* doesExist(char* name)
 {
     return search(head,name);
@@ -48,6 +54,7 @@ void updateDataSymbolValues(int value)
     }
 }
 
+/*The function will free a linked list of symbols from allocated memory*/
 void freeSymbolTable()
 {
     Symbol* curr;
