@@ -41,7 +41,7 @@ void createExternFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
     char* name;
-    char address[2];
+    char address[3];
     char finalFileName[MAX_FILE_LENGTH+4];
     Symbol* head;
     Symbol* curr;
@@ -77,7 +77,7 @@ void createEntryFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
     char* name;
-    char address[2];
+    char address[3];
     char finalFileName[MAX_FILE_LENGTH+4];
     Symbol* head;
     Symbol* curr;
