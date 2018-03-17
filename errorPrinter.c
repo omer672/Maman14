@@ -29,6 +29,22 @@ void getErrorMessage(StatusCode code,char* message)
     case struct_syntax_error:
         strcpy(message,".struct syntax error");
         break;
+    case symbol_not_recognized:
+        strcpy(message,"symbol not recognized error");
+        break;
+    case operand_type_error:
+        strcpy(message,"operand type error");
+        break;
+    case row_count_error:
+        strcpy(message,"counting summary of rows error");
+        break;
+    case inst_sum_error:
+        strcpy(message,"instruction rows summary error");
+        break;
+
+
+
+
     }
 }
 

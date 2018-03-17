@@ -40,7 +40,11 @@ typedef enum errorList {
     symbol_doesnt_exist = -5,
     data_syntax_error = -6,
     string_syntax_error = -7,
-    struct_syntax_error = -8
+    struct_syntax_error = -8,
+    symbol_not_recognized=-9,
+    operand_type_error=-10,
+    row_count_error=-11,
+    inst_sum_error=-12
 
     /* Tal add any errors you need in this format (decsending numbers) */
 } StatusCode;
