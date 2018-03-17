@@ -39,6 +39,6 @@ void printError(StatusCode code, int line, char* fileName)
     if(code<0)
     {
         getErrorMessage(code,errorMessage);
-        fprintf(stderr,"Error: %s. On line: %d and file: %s",errorMessage,line,fileName);
+        fprintf(stderr,"Error: %s. On line: %d and file: %s\n",errorMessage,line,fileName);
     }
 }

@@ -18,7 +18,7 @@ void runProg(char* fileName)
 {
     FILE* file;
     char fileFullName[MAX_FILE_LENGTH+3];
-    strcat(fileFullName,fileName);
+    strcpy(fileFullName,fileName);
     strcat(fileFullName,".as");
     if((file = fopen(fileFullName,"r")) != NULL)
     {
@@ -26,7 +26,7 @@ void runProg(char* fileName)
         iterate(file,fileName);
     }
     else
-        printf("File cannot be open, moving on");
+        fprintf(stderr,"File cannot be open, moving on. %s",fileFullName);
 }
 
 int main(int argc, char *argv[])

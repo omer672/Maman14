@@ -1,10 +1,7 @@
 #include "secondIteration.h"
-#include "fileCreator.c"
 
 void secondIterate(FILE* file, char* fileName)
 {
-    IC = 0;
-    int errorsFound;
     int i;     /*Auxiliary integers*/
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
@@ -18,6 +15,7 @@ void secondIterate(FILE* file, char* fileName)
     char value[MAX_DIGITS];
     StatusCode code;
 
+    IC = 0;
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
         strcpy(linebufferCopy,lineBuffer);

@@ -1,12 +1,11 @@
 #include "helper.h"
-#include "commandsToBinary.c"
 
 int searchStringInArray(char* array[],int length, char* string)
 {
     int i;
     for(i=0;i<length;i++)
     {
-        if(strcmp(array[i],string))
+        if(strcmp(array[i],string) == 0)
             return 1;
     }
     return 0;
@@ -45,12 +44,24 @@ int isRegister(char* string)
 
 int isExtern(char* string)
 {
-    return strcmp(ENTRY,string);
+    if ((unsigned char)(*string) == '.')
+    {
+        string++;
+        return (strcmp(EXTERN,string) == 0);
+    }
+    else
+        return 0;
 }
 
 int isEntry(char* string)
 {
-    return strcmp(ENTRY,string);
+    if ((unsigned char)(*string) == '.')
+    {
+        string++;
+        return (strcmp(ENTRY,string) == 0);
+    }
+    else
+        return 0;
 }
 
 int isInt(char* string)
@@ -154,6 +165,7 @@ StatusCode insertTypeStruct(char* dataToInsert)
 
 StatusCode insertData(char* type, char* data)
 {
+    printf("insertData char* type: %s char* data: %s\n",type,data);
     if (strcmp(type, dataTypes[0]) == 0)
     { /* .data */
         return insertTypeData(data);
@@ -174,6 +186,7 @@ StatusCode insertExtern(char* symbols)
     char first[MAX_FILE_LENGTH];
     char second[MAX_FILE_LENGTH];
 
+    printf("inside. symbol: %s",symbols);
     if(sscanf(symbols,"%s %s",first,second) == 1) /* Used to check if there is more than 1 operand */
     {
         return setSymbol(first, 0,tCode,0, external);
@@ -189,15 +202,15 @@ StatusCode insertExtern(char* symbols)
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
     int sumL=0;
-    int keepBin;//keep the binary num before insert to instruction array
+    int keepBin;/*keep the binary num before insert to instruction array*/
     char* firstOp, secondOp;
-    char* temp=strtok(operands,',');
-    strcpy(firstOp,temp); //first operand
+    char* temp=strtok(operands,",");
+    strcpy(firstOp,temp); /*first operand*/
     temp=strtok(NULL,",");
-    strcpy(secondOp,temp);//second operand
-    sumL=instSumRow(firstOp,secondOp);//Sum of rows - to IC
-    keepBin=searchOp(instruction);//will search the command and return its place(equals to his binary number)
-    //insert 4 bits instruction binary to array
+    strcpy(secondOp,temp);/*second operand*/
+    sumL=instSumRow(firstOp,secondOp);/*Sum of rows - to IC*/
+    keepBin=searchOp(instruction);/*will search the command and return its place(equals to his binary number)*/
+    /*insert 4 bits instruction binary to array*/
     instructionsArray[IC]=(int)keepBin;
     opType typeOne,typeTwo;
     typeOne=checkType(firstOp);
@@ -205,13 +218,13 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     /*First iterate*/
     if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
     {
-        if (typeOne == '-' || typeTwo == '-')//unrecognized Symbol, enter '-'
+        if (typeOne == '-' || typeTwo == '-')/*unrecognized Symbol, enter '-'*/
         {
-            instructionsArray[IC] = '-';//will return on second iteration
-            IC++;//increases IC by '1' and continue;
-        } else//casual operands
+            instructionsArray[IC] = '-';/*will return on second iteration*/
+            IC++;/*increases IC by '1' and continue;*/
+        } else/*casual operands*/
         {
-            keepBin = typeOne;//get binary by enum place.
+            keepBin = typeOne;/*get binary by enum place.*/
             /*insert 2 bits for source operand*/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             keepBin = typeTwo;
@@ -219,7 +232,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /*shift left 2 bits for A/R/E - first iterate, will place 00 end of command*/
             instructionsArray[IC] = 0<<2;
-            IC += sumL;//increases IC by the rows needed by the inserted command
+            IC += sumL;/*increases IC by the rows needed by the inserted command*/
         }
     }
     /*Second iterate*/
@@ -238,8 +251,8 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
         if(instructionsArray[IC]=='-')
         {
             instructionsArray[IC]='0';
-            //Will find symbol on checkType function
-            keepBin = typeOne;//get binary by enum place.
+            /*Will find symbol on checkType function*/
+            keepBin = typeOne;/*get binary by enum place.*/
             /*insert 2 bits for source operand*/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             keepBin = typeTwo;
@@ -247,9 +260,9 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /**insert 2 bits for A/R/E - OMER, can implement this one?**/
             instructionsArray[IC] = (instructionsArray[IC] << 2) +opType1;
-                    IC += sumL;//increases IC by the rows needed by the inserted command
+            IC += sumL;/*increases IC by the rows needed by the inserted command*/
         }
-        else//covered on first iterate
+        else/*covered on first iterate*/
             IC++;
     }
     /*EDGE CASE ERROR - More than 2 operands at the same command*/

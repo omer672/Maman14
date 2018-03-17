@@ -74,7 +74,7 @@ int opSumRow(opType operand)
     }
     else
     {
-        //ERROR
+        /*ERROR*/
         rowCnt=-1;
     }
     return rowCnt;

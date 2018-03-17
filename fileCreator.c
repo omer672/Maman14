@@ -10,7 +10,7 @@ void createObjFile(char *fileName)
     char address[2];
     char finalFileName[MAX_FILE_LENGTH+3];
     FILE* file;
-    strcat(finalFileName,fileName); /* creates the file */
+    strcpy(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ob");
     if((file = fopen(finalFileName ,"w")) != NULL)
     {
@@ -32,7 +32,7 @@ void createObjFile(char *fileName)
     }
     else
     {
-        /* ERROR */
+        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
 
@@ -45,7 +45,7 @@ void createExternFile(char *fileName)
     Symbol* head;
     Symbol* curr;
     FILE* file;
-    strcat(finalFileName,fileName); /* creates the file */
+    strcpy(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ext");
     if((file = fopen(finalFileName ,"w")) != NULL)
     {
@@ -66,7 +66,7 @@ void createExternFile(char *fileName)
     }
     else
     {
-        /* ERROR */
+        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
 
@@ -79,7 +79,7 @@ void createEntryFile(char *fileName)
     Symbol* head;
     Symbol* curr;
     FILE* file;
-    strcat(finalFileName,fileName); /* creates the file */
+    strcpy(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ent");
     if((file = fopen(finalFileName ,"w")) != NULL)
     {
@@ -100,7 +100,7 @@ void createEntryFile(char *fileName)
     }
     else
     {
-        /* ERROR */
+        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
 
