@@ -74,11 +74,6 @@ int isInt(char* string)
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
-int isString(char* string)
-{
-
-}
-
 StatusCode insertTypeData(char* dataToInsert)
 {
     int tempDataArray[MAX_FILE_LENGTH];
@@ -112,7 +107,7 @@ StatusCode insertTypeData(char* dataToInsert)
 StatusCode insertTypeString(char* dataToInsert)
 {
     char actualString[MAX_FILE_LENGTH];
-    int i;
+    unsigned int i;
     int count = 0;
     char* token;
     char* savedPtr;
@@ -199,32 +194,37 @@ StatusCode insertExtern(char* symbols)
     }
 }
 
-
-/* TODO: please implement Tal - insert into instruction array, and increase IC by L (calc according to the table on the instructions) */
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
+    StatusCode code;
     int sumL=0;
     int keepBin;/*keep the binary num before insert to instruction array*/
-    char* firstOp, secondOp;
-    char* temp=strtok(operands,",");
-    strcpy(firstOp,temp); /*first operand*/
-    temp=strtok(NULL,",");
-    strcpy(secondOp,temp);/*second operand*/
-    sumL=instSumRow(firstOp,secondOp);/*Sum of rows - to IC*/
+    char firstOp[LINE_LENGTH];
+    char secondOp[LINE_LENGTH];
+    char* token=strtok(operands,",");
+    strcpy(firstOp,token); /*first operand*/
+    token=strtok(NULL,"");
+    strcpy(secondOp,token);/*second operand*/
+    if((code = instSumRow(firstOp,secondOp,&sumL)) < 0)/*Sum of rows - to IC*/
+        return code;
     keepBin=searchOp(instruction);/*will search the command and return its place(equals to his binary number)*/
     /*insert 4 bits instruction binary to array*/
-    instructionsArray[IC]=(int)keepBin;/*4 bits command inserted first*/
+    instructionsArray[IC]= keepBin;/*4 bits command inserted first*/
     opType typeOne,typeTwo;
-    typeOne=checkType(firstOp);/*get the type of the first operand*/
-    typeTwo=checkType(secondOp);/*get the type of the second operand*/
+    if((code = checkType(firstOp,&typeOne)) < 0) /*get the type of the first operand*/
+        return code;
+    if((code = checkType(secondOp,&typeTwo)) < 0) /*get the type of the second operand*/
+        return code;
+
     /*First iterate*/
-    if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
+    if(isSecondIteration == 0)
     {
-        if (typeOne == '-' || typeTwo == '-')/*case got on unrecognized Symbol, enter '-'*/
+        if (typeOne == '-' || typeTwo == '-') /*case got on unrecognized Symbol, enter '-'*/
         {
             instructionsArray[IC] = '-';/*will enter '-' as flag for second iterate - and continues*/
             IC++;/*increases IC by '1' and continue;*/
-        } else/*casual operands recognized*/
+        }
+        else /*casual operands recognized*/
         {
             keepBin = typeOne;/*get binary by enum place.*/
             /*insert 2 bits for source operand*/
@@ -233,24 +233,26 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             /**insert 2 bits for destination operand**/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
             /*shift left 2 bits for A/R/E - first iterate, will place 00 end of command*/
-            instructionsArray[IC] = 0<<2;
+            instructionsArray[IC] = instructionsArray[IC] << 2;
             IC += sumL;/*increases IC by the rows needed by the inserted command*/
         }
     }
-        /*Second iterate*/
+    /*Second iterate*/
     else
     {
-        Symbol* op1, *op2;/*gets the type of Symbols that found on second iterate, similar to first iterate by definition*/
-        if(doesExist(firstOp))
-            op1=doesExist(firstOp);
-        if(doesExist(secondOp))
-            op2=doesExist(secondOp);
-        SymbolType opType1=op1->symbolType;
-        SymbolType opType2=op2->symbolType;
-        typeOne=checkTypeSecIter(opType1);
-        typeTwo=checkTypeSecIter(opType2);
-
-        if(instructionsArray[IC]=='-')/*if found flag '-' for symbols that have not recognized on first iterate*/
+        Symbol* op1, *op2; /*gets the type of Symbols that found on second iterate, similar to first iterate by definition*/
+        SymbolType opType1,opType2;
+        if((op1 = doesExist(firstOp)) == NULL)
+            return symbol_doesnt_exist;
+        if((op2 = doesExist(secondOp)) == NULL)
+            return symbol_doesnt_exist;
+        opType1=op1->symbolType;
+        opType2=op2->symbolType;
+        if((code = checkTypeSecIter(opType1,&typeOne)) < 0)
+            return code;
+        if((code = checkTypeSecIter(opType2,&typeTwo)) < 0)
+            return code;
+        if(instructionsArray[IC]=='-') /*if found flag '-' for symbols that have not recognized on first iterate*/
         {
             instructionsArray[IC]='0';
             /*Will find symbol on checkType function*/
@@ -260,11 +262,12 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             keepBin = typeTwo;
             /**insert 2 bits for destination operand**/
             instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            /**insert 2 bits for A/R/E - OMER, can implement this one?**/
+            /* insert 2 bits for A/R/E */
             instructionsArray[IC] = (instructionsArray[IC] << 2) +opType1;
-            IC += sumL;/*increases IC by the rows needed by the inserted command*/
+            IC += sumL; /*increases IC by the rows needed by the inserted command*/
         }
-        else/*covered on first iterate*/
+        else /*covered on first iterate*/
             IC++;
     }
     return success;
+}
