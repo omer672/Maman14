@@ -265,13 +265,5 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
         else/*covered on first iterate*/
             IC++;
     }
-    /*EDGE CASE ERROR - More than 2 operands at the same command*/
-    /*to calculate L need to check how many rows the instruction will take*/
-    /*Needed Functions
-     * check operands type - checkType
-     * check machine code the operand will take by his type - opSumRow
-     * take the whole row and check how many rows will take - instSumRow
-     * add instruction to array and increase by L - This func*/
-
-
+    return success;
 }

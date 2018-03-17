@@ -29,8 +29,8 @@ StatusCode markEntry(char* symbol)
     }
     return success;
 }
-/*gets string operands and checks its type - imm, direct, struct, register*/
-opType checkType(char *reqOp)
+/*gets string operands and checks its type on first iterate - imm, direct, struct, register*/
+StatusCode checkType(char *reqOp)
 {
     opType operand;
     if(reqOp[0]=='#'){
@@ -46,20 +46,26 @@ opType checkType(char *reqOp)
     else{
         /*ERROR - second iteration, search symbol argument and implement into up if's*/
         operand='-';
+        return symbol_not_reconized;
         }
-    return operand;
+    /*return operand; ERROR FIXING, NOTICE - OMER*/
+    return success;
 }
-opType checkTypeSecIter(SymbolType num)
+/*gets string operands and checks its type on second iterate - imm, direct, struct, register*/
+StatusCode checkTypeSecIter(SymbolType num)
 {
     opType operand;
     if(num==tData || num==tCode || num==tString)
         operand=Direct;
     else if(num==tStruct)
         operand=Struct;
-    return operand;
+    else
+        return operand_type_error;
+    /*return operand; ERROR FIXING, NOTICE - OMER*/
+    return success;
 }
-
-int opSumRow(opType operand)
+/*The func calculated how many rows the operand inserted takes*/
+StatusCode opSumRow(opType operand)
 {
     int rowCnt=0;
     /*Struct operand takes 2 rows*/
@@ -74,13 +80,15 @@ int opSumRow(opType operand)
     }
     else
     {
-        /*ERROR*/
-        rowCnt=-1;
+        /*ERROR FIXING - NOTICE OMER*/
+        /*rowCnt=-1;*/
+        return row_count_error;
     }
-    return rowCnt;
+    /*return rowCnt; ERROR FIXING - NOTICE OMER*/
+    return success;
 }
 /*takes 2 operands and returns number of rows the command will take*/
-int instSumRow(char *first, char *second)
+StatusCode instSumRow(char *first, char *second)
 {
     int firstOpSum=0;
     int secOpSum=0;
@@ -94,8 +102,9 @@ int instSumRow(char *first, char *second)
         /*get sum of rows for operand*/
         firstOpSum=opSumRow(firstTP);
         if(firstOpSum==01){
-            printf("ERROR");
-            return 0;
+            /*printf("ERROR") ERROR FIXING - NOTICE OMER;
+            return 0;*/
+            return inst_sum_error;
         }
     }
 
@@ -104,21 +113,18 @@ int instSumRow(char *first, char *second)
         secondTP=checkType(second);
         secOpSum=opSumRow(secondTP);
         if(secOpSum==-1) {
-            printf("ERROR");
-            return 0;
+            /*printf("ERROR");
+            return 0; ERROR FIXING - NOTICE OMER*/
+            return inst_sum_error;
         }
     }
-
     /*EDGE CASE - both registers*/
     if(firstTP==Register && secondTP==Register)
         secOpSum=0;
-
-    /*return sum:
-     * first operand
-     * second operand
-     * command*/
+    /*calculates sum: first operand, second operand, command*/
     sumRows=firstOpSum+secOpSum+1;
-    return sumRows;
+    /*return sumRows; ERROR FIXING - NOTICE OMER*/
+    return success;
 }
 /*search the command, return his place(equals to his binary 4 bits)*/
 int searchOp(char* opCode)
