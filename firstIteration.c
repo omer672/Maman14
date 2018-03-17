@@ -34,7 +34,7 @@ void iterate(FILE* file, char* fileName)
     DC = 0;
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
-        printf("line: %s\n",lineBuffer);
+        numberOfLines++;
         if(!(isWhitespace(lineBuffer) || (unsigned char)(*lineBuffer) == ';')) /* Checking for empty line or comment line */
         {
             strcpy(linebufferCopy,lineBuffer);
@@ -44,7 +44,7 @@ void iterate(FILE* file, char* fileName)
             {
                 symbolPosition = (int)(symbolPos-command);
                 strncpy(symbol, command,symbolPosition);
-                symbol[symbolPosition + 1] = '\0'; /* strncpy doesn't insert \0 at the end */
+                symbol[symbolPosition] = '\0'; /* strncpy doesn't insert \0 at the end */
                 foundSymbol = 1;
                 strcpy(command, strtok(NULL, delimit));	/*Should contain instruction/data command */
             }
@@ -113,9 +113,7 @@ void iterate(FILE* file, char* fileName)
                 }
             }
         }
-        numberOfLines++;
     }
-    printf("%d\n",numberOfLines);
     if(!errorsFound)
     {
         updateDataSymbolValues(IC); /* add the value of IC to the symbols given at "data" part */

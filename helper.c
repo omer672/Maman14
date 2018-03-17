@@ -81,6 +81,7 @@ StatusCode insertTypeData(char* dataToInsert)
     int tempDataArray[MAX_FILE_LENGTH];
     int i = 0;
     int j;
+    int endIndex;
     char* token;
     char line[MAX_FILE_LENGTH];
     
@@ -99,8 +100,8 @@ StatusCode insertTypeData(char* dataToInsert)
         token = strtok(NULL, ",");
         i++;
     }
-
-    for(j=DC; j<DC+i && DC<MAX_FILE_LENGTH;j++,DC++)
+    endIndex = DC+i;
+    for(j=DC; j<endIndex && DC<MAX_FILE_LENGTH;j++,DC++)
     {
         dataArray[DC] = tempDataArray[j-DC]; /* Fill the real data array after we discovered no errors */
     }
@@ -112,14 +113,17 @@ StatusCode insertTypeString(char* dataToInsert)
     char actualString[MAX_FILE_LENGTH];
     int i;
     int count = 0;
-    char *token;
+    char* token;
+    char* savedPtr;
+    char delimiter[1] = "\"";
     char line[MAX_FILE_LENGTH];
 
     if(isWhitespace(dataToInsert))
         return wrong_number_of_operands;
 
     strcpy(line,dataToInsert); /* strtok ruins the string */
-    token = strtok (line, "\"");
+
+    token = strtok_r(line, delimiter,&savedPtr);
     while (token != NULL)
     {
         if(strcmp(token,dataToInsert) == 0) /* Meaning no token were found, hence no " was found */
@@ -129,7 +133,7 @@ StatusCode insertTypeString(char* dataToInsert)
             strcpy (actualString, token);
             count++;
         }
-        token = strtok (NULL, "\"");
+        token = strtok_r(NULL, delimiter,&savedPtr);
     }
     if (count != 1) /* Meaning no strings were found or more than 1 string was found */
         return string_syntax_error;
@@ -147,15 +151,14 @@ StatusCode insertTypeString(char* dataToInsert)
 StatusCode insertTypeStruct(char* dataToInsert)
 {
     char* token;
+    char* savedPtr;
     char line[MAX_FILE_LENGTH];
 
     strcpy(line,dataToInsert); /* strtok ruins the string */
-    token = strtok(line, ",");
-
+    token = strtok_r(line, ",",&savedPtr);
     if(insertTypeData(token) < 0) /* First token should be a number */
         return struct_syntax_error;
-
-    token = strtok(NULL,""); /* Get the rest of the string */
+    token = strtok_r(NULL,"",&savedPtr); /* Get the rest of the string */
 
     /* At this point token should be a string */
     if(insertTypeString(token) < 0)
@@ -165,7 +168,7 @@ StatusCode insertTypeStruct(char* dataToInsert)
 
 StatusCode insertData(char* type, char* data)
 {
-    printf("insertData char* type: %s char* data: %s\n",type,data);
+    type++; /* starts with . so we skip it */
     if (strcmp(type, dataTypes[0]) == 0)
     { /* .data */
         return insertTypeData(data);
@@ -185,8 +188,6 @@ StatusCode insertExtern(char* symbols)
     /*got extern - uses functions from Symbol table and linkedList*/
     char first[MAX_FILE_LENGTH];
     char second[MAX_FILE_LENGTH];
-
-    printf("inside. symbol: %s",symbols);
     if(sscanf(symbols,"%s %s",first,second) == 1) /* Used to check if there is more than 1 operand */
     {
         return setSymbol(first, 0,tCode,0, external);

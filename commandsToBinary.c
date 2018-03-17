@@ -4,15 +4,15 @@ StatusCode markEntry(char* symbol)
 {
     Symbol* sym;
     int i = 0;
-    char name[strlen(symbol)];
+    char name[MAX_FILE_LENGTH];
     char* token;
-    char delimiter[11] = " \t\n\v\f\r"; /* all of the whitespace chars*/
+    char delimiter[6] = " \t\n\v\f\r"; /* all of the whitespace chars*/
     token = strtok(symbol,delimiter);
 
     while(token != NULL)
     {
-        if(i==1)
-            strcpy(name,token);
+        printf("token: %s\n",token);
+        strcpy(name,token);
         i++;
         token = strtok(NULL,delimiter);
     }
@@ -35,18 +35,18 @@ opType checkType(char *reqOp)
     opType operand;
     if(reqOp[0]=='#'){
         operand=Immediate;}
-        /*label? to check if symbols need to be part of the func*/
+    /*label? to check if symbols need to be part of the func*/
     else if(doesExist(reqOp)){
         operand=Direct;}
     else if(isdigit(reqOp[0])&&reqOp[1]==','){
         operand=Struct;}
-        /*r1..r9, check if 'r' 1st, digit 2nd, 2 chars word*/
+    /*r1..r9, check if 'r' 1st, digit 2nd, 2 chars word*/
     else if(isRegister(reqOp))
         operand=Register;
     else{
         /*ERROR - second iteration, search symbol argument and implement into up if's*/
         operand='-';
-        }
+    }
     return operand;
 }
 opType checkTypeSecIter(SymbolType num)
@@ -67,7 +67,7 @@ int opSumRow(opType operand)
     {
         rowCnt=2;
     }
-        /*Dir, Reg, Imm takes 1 row*/
+    /*Dir, Reg, Imm takes 1 row*/
     else if(operand==Direct || operand==Register || operand==Immediate)
     {
         rowCnt=1;

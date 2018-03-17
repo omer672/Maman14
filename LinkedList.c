@@ -40,6 +40,7 @@ Symbol* search(Symbol* head, char* name)
     {
         if(strcmp(curr->name,name) == 0)
             return curr;
+        curr=curr->next;
     }
     return NULL;
 }

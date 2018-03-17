@@ -3,9 +3,8 @@
 void createObjFile(char *fileName)
 {
     int i;
-    int dataArray[MAX_FILE_LENGTH];
     int instructionsArray[MAX_FILE_LENGTH];
-    char lineBuffer[5];
+    char lineBuffer[8];
     char code[2];
     char address[2];
     char finalFileName[MAX_FILE_LENGTH+3];
@@ -18,14 +17,14 @@ void createObjFile(char *fileName)
         {
             ConvertBinTo32(instructionsArray[i],code);
             ConvertBinTo32(START_ADDRESS+i,address);
-            sprintf(lineBuffer,"%s\t%s",address,code);
+            sprintf(lineBuffer,"%s\t%s\n",address,code);
             fputs(lineBuffer,file);
         }
         for(i = 0; i< DC; i++)
         {
             ConvertBinTo32(dataArray[i],code);
             ConvertBinTo32(START_ADDRESS+i+IC,address);
-            sprintf(lineBuffer,"%s\t%s",address,code);
+            sprintf(lineBuffer,"%s\t%s\n",address,code);
             fputs(lineBuffer,file);
         }
         fclose(file);
@@ -57,7 +56,7 @@ void createExternFile(char *fileName)
             {
                 name = curr->name;
                 ConvertBinTo32(curr->value,address);
-                sprintf(lineBuffer,"%s\t%s",name,address);
+                sprintf(lineBuffer,"%s\t%s\n",name,address);
                 fputs(lineBuffer,file);
             }
             curr = curr->next;
@@ -91,7 +90,7 @@ void createEntryFile(char *fileName)
             {
                 name = curr->name;
                 ConvertBinTo32(curr->value,address);
-                sprintf(lineBuffer,"%s\t%s",name,address);
+                sprintf(lineBuffer,"%s\t%s\n",name,address);
                 fputs(lineBuffer,file);
             }
             curr = curr->next;

@@ -18,9 +18,10 @@ StatusCode isLegal(char* symbol)
 
 StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types type)
 {
+    printf("setSymbol, symbol: %s\n",name);
     if(isLegal(name) < 0)
         return illigal_symbol_name;
-    if(search(head,name))
+    if(doesExist(name) != NULL)
         return redeclaration_of_symbol;
     addSymbol(&head,name,value,sType,isEntry,type);
     return success;
@@ -43,6 +44,7 @@ void updateDataSymbolValues(int value)
     {
         if(curr->symbolType != tCode) /* Meaning was given as a data type */
             curr->value+=value;
+        curr = curr->next;
     }
 }
 
