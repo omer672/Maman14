@@ -1,5 +1,6 @@
 #include "main.h"
 #include "symbolTable.h"
+#include "Parsing.h"
 
 int isInstuction(char* string);
 

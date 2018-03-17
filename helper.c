@@ -84,8 +84,6 @@ StatusCode insertTypeData(char* dataToInsert)
     int endIndex;
     char* token;
     char line[MAX_FILE_LENGTH];
-    
-
     if(isWhitespace(dataToInsert))
         return wrong_number_of_operands;
     strcpy(line,dataToInsert); /* strtok ruins the string */
@@ -94,7 +92,7 @@ StatusCode insertTypeData(char* dataToInsert)
     while(token != NULL)
     {
         if(isInt(token)) /* Every token is suppose to contain one integer */
-            tempDataArray[i] = atoi(token);
+            tempDataArray[i] = twosComplements(atoi(token));
         else
             return data_syntax_error;
         token = strtok(NULL, ",");

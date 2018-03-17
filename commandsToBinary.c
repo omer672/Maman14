@@ -46,7 +46,7 @@ StatusCode checkType(char *reqOp)
     else{
         /*ERROR - second iteration, search symbol argument and implement into up if's*/
         operand='-';
-        return symbol_not_reconized;
+        return symbol_not_recognized;
         }
     /*return operand; ERROR FIXING, NOTICE - OMER*/
     return success;

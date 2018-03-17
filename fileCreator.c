@@ -3,10 +3,9 @@
 void createObjFile(char *fileName)
 {
     int i;
-    int instructionsArray[MAX_FILE_LENGTH];
     char lineBuffer[8];
-    char code[2];
-    char address[2];
+    char code[3];
+    char address[3];
     char finalFileName[MAX_FILE_LENGTH+3];
     FILE* file;
     strcpy(finalFileName,fileName); /* creates the file */
