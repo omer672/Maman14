@@ -1,4 +1,5 @@
 #include "fileCreator.h"
+/*The function creates .ob file*/
 
 void createObjFile(char *fileName)
 {
@@ -33,7 +34,9 @@ void createObjFile(char *fileName)
         fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
-
+/*The function creates .ext file
+ * Input: extern file name
+ * Output: creates the file at the project directory*/
 void createExternFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
@@ -67,7 +70,9 @@ void createExternFile(char *fileName)
         fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
-
+/*The function creates .ent file
+ * Input: entry file name
+ * Output: creates the file at the project directory*/
 void createEntryFile(char *fileName)
 {
     char lineBuffer[LINE_LENGTH];
@@ -101,7 +106,9 @@ void createEntryFile(char *fileName)
         fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
     }
 }
-
+/*The function creates all requested files to create
+ * Input: file name
+ * Output: .ob , .ext, .ent files*/
 void createOutputFiles(char *fileName)
 {
     createObjFile(fileName);

@@ -1,5 +1,5 @@
 #include "errorPrinter.h"
-
+/*The function handles all errors and print suitable notice*/
 void getErrorMessage(StatusCode code,char* message)
 { /* Tal, add error messages in this format */
     switch (code) {

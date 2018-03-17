@@ -1,5 +1,5 @@
 #include "helper.h"
-
+/*The functions searches if string exists in array*/
 int searchStringInArray(char* array[],int length, char* string)
 {
     int i;
@@ -20,12 +20,13 @@ int isWhitespace(char* line)
     }
     return 1;
 }
-
+/*The function checks if string inserted to the function is an Instruction*/
 int isInstuction(char* string)
 {
     return searchStringInArray(instructions,NUM_OF_INSTRUCTS,string);
 }
 
+/*The functions checks if string inserted is a data type by definition*/
 int isDataType(char* string)
 {
     if ((unsigned char)(*string) == '.')
@@ -37,11 +38,13 @@ int isDataType(char* string)
         return 0;
 }
 
+/*The function checks if string inserted is a register(r1..r9)*/
 int isRegister(char* string)
 {
     return searchStringInArray(registers,NUM_OF_REGISTERS,string);
 }
 
+/*The function checks if string inserted is a extern by definition*/
 int isExtern(char* string)
 {
     if ((unsigned char)(*string) == '.')
@@ -210,18 +213,18 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     sumL=instSumRow(firstOp,secondOp);/*Sum of rows - to IC*/
     keepBin=searchOp(instruction);/*will search the command and return its place(equals to his binary number)*/
     /*insert 4 bits instruction binary to array*/
-    instructionsArray[IC]=(int)keepBin;
+    instructionsArray[IC]=(int)keepBin;/*4 bits command inserted first*/
     opType typeOne,typeTwo;
-    typeOne=checkType(firstOp);
-    typeTwo=checkType(secondOp);
+    typeOne=checkType(firstOp);/*get the type of the first operand*/
+    typeTwo=checkType(secondOp);/*get the type of the second operand*/
     /*First iterate*/
     if(isSecondIteration==0) /*Tal: different behaviours depending on iteration - read on it please*/
     {
-        if (typeOne == '-' || typeTwo == '-')/*unrecognized Symbol, enter '-'*/
+        if (typeOne == '-' || typeTwo == '-')/*case got on unrecognized Symbol, enter '-'*/
         {
-            instructionsArray[IC] = '-';/*will return on second iteration*/
+            instructionsArray[IC] = '-';/*will enter '-' as flag for second iterate - and continues*/
             IC++;/*increases IC by '1' and continue;*/
-        } else/*casual operands*/
+        } else/*casual operands recognized*/
         {
             keepBin = typeOne;/*get binary by enum place.*/
             /*insert 2 bits for source operand*/
@@ -234,10 +237,10 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             IC += sumL;/*increases IC by the rows needed by the inserted command*/
         }
     }
-    /*Second iterate*/
+        /*Second iterate*/
     else
     {
-        Symbol* op1, *op2;
+        Symbol* op1, *op2;/*gets the type of Symbols that found on second iterate, similar to first iterate by definition*/
         if(doesExist(firstOp))
             op1=doesExist(firstOp);
         if(doesExist(secondOp))
@@ -247,7 +250,7 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
         typeOne=checkTypeSecIter(opType1);
         typeTwo=checkTypeSecIter(opType2);
 
-        if(instructionsArray[IC]=='-')
+        if(instructionsArray[IC]=='-')/*if found flag '-' for symbols that have not recognized on first iterate*/
         {
             instructionsArray[IC]='0';
             /*Will find symbol on checkType function*/
@@ -265,4 +268,3 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             IC++;
     }
     return success;
-}
