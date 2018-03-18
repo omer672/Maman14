@@ -1,3 +1,6 @@
+/*Maman 14, created by Omer Cheri & Tal Boosy
+ * Group 01, Roy Rachmany*/
+
 #ifndef MAIN_H
 #define MAIN_H
 

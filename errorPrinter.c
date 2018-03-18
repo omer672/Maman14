@@ -1,7 +1,7 @@
 #include "errorPrinter.h"
 /*The function handles all errors and print suitable notice*/
 void getErrorMessage(StatusCode code,char* message)
-{ /* Tal, add error messages in this format */
+{
     switch (code) {
     case success:
         break;
@@ -47,7 +47,7 @@ void getErrorMessage(StatusCode code,char* message)
     }
 }
 
-
+/*The function will print the error with the line error appeared*/
 void printError(StatusCode code, int line, char* fileName)
 {
     char errorMessage[MAX_FILE_LENGTH];

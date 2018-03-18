@@ -1,8 +1,9 @@
 #include "commandsToBinary.h"
 
+/*The function checks if the symbol inserted is entry and marks it*/
 StatusCode markEntry(char* symbol)
 {
-    Symbol* sym;
+    Symbol* sym;/*Symbol pointer*/
     int i = 0;
     char name[MAX_FILE_LENGTH];
     char* token;
@@ -30,7 +31,7 @@ StatusCode markEntry(char* symbol)
     }
     return success;
 }
-/*gets string operands and checks its type on first iterate - imm, direct, struct, register*/
+/*The function gets string operands and checks its type on first iterate - imm, direct, struct, register*/
 StatusCode checkType(char *reqOp, opType* result)
 {
     opType operand;
@@ -54,7 +55,7 @@ StatusCode checkType(char *reqOp, opType* result)
     *result = operand;
     return success;
 }
-/*gets string operands and checks its type on second iterate - imm, direct, struct, register*/
+/*The function gets string operands and checks its type on second iterate - imm, direct, struct, register*/
 StatusCode checkTypeSecIter(SymbolType sType, opType* result)
 {
     opType operand;
@@ -67,7 +68,7 @@ StatusCode checkTypeSecIter(SymbolType sType, opType* result)
     *result = operand;
     return success;
 }
-/*The func calculated how many rows the operand inserted takes*/
+/*The function calculated how many rows the operand inserted takes*/
 StatusCode opSumRow(opType operand, int* result)
 {
     int rowCnt=0;
@@ -82,7 +83,7 @@ StatusCode opSumRow(opType operand, int* result)
     *result = rowCnt;
     return success;
 }
-/*takes 2 operands and returns number of rows the command will take*/
+/*The function takes 2 operands and returns number of rows the command will take*/
 StatusCode instSumRow(opType firstTP, opType secondTP,int numberOfOperands, int* result)
 {
     int firstOpSum=0;
@@ -108,7 +109,7 @@ StatusCode instSumRow(opType firstTP, opType secondTP,int numberOfOperands, int*
             if((code=opSumRow(secondTP,&secOpSum)) < 0)
                 return code;
         break;
-    default:
+    default:/*case error - will print type of error by enum definition*/
         return wrong_number_of_operands;
         break;
     }
@@ -117,7 +118,7 @@ StatusCode instSumRow(opType firstTP, opType secondTP,int numberOfOperands, int*
     *result = firstOpSum+secOpSum+1;
     return success;
 }
-/*search the command, return his place(equals to his binary 4 bits)*/
+/*The function search the command, return his place(equals to his binary 4 bits)*/
 int searchOp(char* opCode)
 {
     int i=0;
