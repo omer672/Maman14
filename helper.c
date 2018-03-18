@@ -225,7 +225,6 @@ StatusCode insertTypeString(char* dataToInsert)
     unsigned int i;
     int count = 0;
     char* token;
-    char* savedPtr;
     char delimiter[1] = "\"";
     char line[MAX_FILE_LENGTH];
 
@@ -234,7 +233,7 @@ StatusCode insertTypeString(char* dataToInsert)
 
     strcpy(line,dataToInsert); /* strtok ruins the string */
 
-    token = strtok_r(line, delimiter,&savedPtr);
+    token = strtok(line, delimiter);
     while (token != NULL)
     {
         if(strcmp(token,dataToInsert) == 0) /* Meaning no token were found, hence no " was found */
@@ -244,7 +243,7 @@ StatusCode insertTypeString(char* dataToInsert)
             strcpy (actualString, token);
             count++;
         }
-        token = strtok_r(NULL, delimiter,&savedPtr);
+        token = strtok(line+strlen(line)+1, delimiter); /* Keep going from where we were last */
     }
     if (count != 1) /* Meaning no strings were found or more than 1 string was found */
         return string_syntax_error;
@@ -262,14 +261,13 @@ StatusCode insertTypeString(char* dataToInsert)
 StatusCode insertTypeStruct(char* dataToInsert)
 {
     char* token;
-    char* savedPtr;
     char line[MAX_FILE_LENGTH];
 
     strcpy(line,dataToInsert); /* strtok ruins the string */
-    token = strtok_r(line, ",",&savedPtr);
+    token = strtok(line, ",");
     if(insertTypeData(token) < 0) /* First token should be a number */
         return struct_syntax_error;
-    token = strtok_r(NULL,"",&savedPtr); /* Get the rest of the string */
+    token = strtok(line+strlen(line)+1,""); /* Get the rest of the string */
 
     /* At this point token should be a string */
     if(insertTypeString(token) < 0)
