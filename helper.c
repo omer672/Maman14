@@ -11,6 +11,7 @@ int searchStringInArray(char* array[],int length, char* string)
     return 0;
 }
 
+/*The function checks for white spaces on line inserted*/
 int isWhitespace(char* line)
 {
     while (*line != '\0') {
@@ -56,6 +57,7 @@ int isExtern(char* string)
         return 0;
 }
 
+/*The function checks if string entered to function is an entry by definition*/
 int isEntry(char* string)
 {
     if ((unsigned char)(*string) == '.')
@@ -67,14 +69,15 @@ int isEntry(char* string)
         return 0;
 }
 
+/*The function check if string inserted to the function is int by definition*/
 int isInt(char* string)
 {
     char *ptr;
-    long int result = strtol(string, &ptr, 10);
-    (void)result;
+    strtol(string, &ptr, 10);
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
+/*The function checks if the source and destination operand are valid by instructions*/
 int isValidSourceDest(OpCodes code,opType source, opType dest)
 {
     int result = 0;
@@ -116,6 +119,7 @@ int isValidSourceDest(OpCodes code,opType source, opType dest)
     return result;
 }
 
+/*The function checks if the operand is Struct pattern*/
 int findStructField(char* operand)
 {
     char* dotPtr;
@@ -126,6 +130,7 @@ int findStructField(char* operand)
     return 0;
 }
 
+/*The function inserts operand - Direct type*/
 void insertDirect(Symbol* operand, int index)
 {
     /* No need for validation because we already validated earlier */
@@ -142,6 +147,7 @@ void insertDirect(Symbol* operand, int index)
     instructionsArray[index] = numberToInsert;
 }
 
+/*The function inserts operand from type - Struct*/
 void insertStructField(char* operand, int index)
 {
     /* No need for validation because we already validated earlier */
@@ -149,7 +155,7 @@ void insertStructField(char* operand, int index)
     numberToInsert <<= 2;
     instructionsArray[index] = numberToInsert;
 }
-
+/*The function inserts operand to instructionsArray by Immediate type*/
 void insertImmediate(char* operand, int index)
 {
     /* No need for validation because we already validated earlier */
@@ -157,6 +163,7 @@ void insertImmediate(char* operand, int index)
     instructionsArray[index] = (numberToInsert<<2); /* Absolute, no need to add */
 }
 
+/*The function inserts source and destination operands - Registers type*/
 void insertRegisters(char* srcRegister,char* destRegister, int index)
 {
     int numberToInsert = 0;
@@ -314,8 +321,8 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     StatusCode code;
     opType sourceType = Immediate;
     opType destType = Immediate; /* 0 as a default value */
-    Symbol* op1 = NULL;
-    Symbol* op2 = NULL;
+    Symbol* op1;
+    Symbol* op2;
     int sumL=0;
     int i;
     int bothRegisters = 0; /* boolean indicating if both operands are registers */
