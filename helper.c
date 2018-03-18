@@ -274,9 +274,10 @@ StatusCode insertTypeStruct(char* dataToInsert)
 {
     char* token;
     char line[MAX_FILE_LENGTH];
-
     strcpy(line,dataToInsert); /* strtok ruins the string */
     token = strtok(line, ",");
+    if(strcmp(token,dataToInsert) == 0 ) /* Meaning no , was found */
+        return struct_syntax_error;
     if(insertTypeData(token) < 0) /* First token should be a number */
         return struct_syntax_error;
     token = strtok(line+strlen(line)+1,""); /* Get the rest of the string */
