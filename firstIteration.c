@@ -1,6 +1,5 @@
 #include "firstIteration.h"
 
-/*The function handles all global variables used by program*/
 void clearGlobals()
 {
     int i;
@@ -17,7 +16,6 @@ void clearGlobals()
     freeSymbolTable();
 }
 
-/*The function first iterate on file, gets File type and file name and runs through the file*/
 void iterate(FILE* file, char* fileName)
 {
     int errorsFound = 0;

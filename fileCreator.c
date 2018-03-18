@@ -1,6 +1,6 @@
 #include "fileCreator.h"
-
 /*The function creates .ob file*/
+
 void createObjFile(char *fileName)
 {
     int i;
@@ -8,9 +8,9 @@ void createObjFile(char *fileName)
     char code[3];
     char address[3];
     char finalFileName[MAX_FILE_LENGTH+3];
-    FILE* file;/*File pointer*/
+    FILE* file;
     strcpy(finalFileName,fileName); /* creates the file */
-    strcat(finalFileName,".ob"); /*requested end type file*/
+    strcat(finalFileName,".ob");
     if((file = fopen(finalFileName ,"w")) != NULL)
     {
         for(i = 0; i< IC; i++)
@@ -29,7 +29,7 @@ void createObjFile(char *fileName)
         }
         fclose(file);
     }
-    else/*In case file have not created properly*/
+    else
     {
         fprintf(stderr,"File cannot be created, moving on. %s",finalFileName);
     }
