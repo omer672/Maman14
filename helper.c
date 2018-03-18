@@ -73,8 +73,9 @@ int isEntry(char* string)
 int isInt(char* string)
 {
     char *ptr;
+    long int result;
     strtol(string, &ptr, 10);
-    long int result = strtol(string, &ptr, 10);
+    result = strtol(string, &ptr, 10);
     (void)result;
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
@@ -326,8 +327,6 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     StatusCode code;
     opType sourceType = Immediate;
     opType destType = Immediate; /* 0 as a default value */
-    Symbol* op1;
-    Symbol* op2;
     Symbol* op1 = NULL;
     Symbol* op2 = NULL;
     int sumL=0;
