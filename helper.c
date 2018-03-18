@@ -201,7 +201,7 @@ StatusCode trimOperand(char* operand)
     return success;
 }
 
-
+/*The function handles to data array by type - This func handles Data*/
 StatusCode insertTypeData(char* dataToInsert)
 {
     int tempDataArray[MAX_FILE_LENGTH];
@@ -231,6 +231,7 @@ StatusCode insertTypeData(char* dataToInsert)
     return success;
 }
 
+/*The function handles to data array by type - This func handles String*/
 StatusCode insertTypeString(char* dataToInsert)
 {
     char actualString[MAX_FILE_LENGTH];
@@ -270,6 +271,7 @@ StatusCode insertTypeString(char* dataToInsert)
     return success;
 }
 
+/*The function handles to data array by type - This func handles Struct*/
 StatusCode insertTypeStruct(char* dataToInsert)
 {
     char* token;
