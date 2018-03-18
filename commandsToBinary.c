@@ -22,6 +22,7 @@ StatusCode markEntry(char* symbol)
     {
         if((sym = doesExist(name)) != NULL)
         {
+            entryFound = 1;
             sym->isEntry = 1;
         }
         else

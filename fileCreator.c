@@ -116,8 +116,8 @@ void createEntryFile(char *fileName)
 void createOutputFiles(char *fileName)
 {
     createObjFile(fileName);
-    createExternFile(fileName);
-    createEntryFile(fileName);
+    if(externFound)
+        createExternFile(fileName);
+    if(entryFound)
+        createEntryFile(fileName);
 }
-
-
