@@ -74,6 +74,8 @@ int isInt(char* string)
 {
     char *ptr;
     strtol(string, &ptr, 10);
+    long int result = strtol(string, &ptr, 10);
+    (void)result;
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
@@ -326,6 +328,8 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     opType destType = Immediate; /* 0 as a default value */
     Symbol* op1;
     Symbol* op2;
+    Symbol* op1 = NULL;
+    Symbol* op2 = NULL;
     int sumL=0;
     int i;
     int bothRegisters = 0; /* boolean indicating if both operands are registers */
