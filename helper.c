@@ -237,7 +237,7 @@ StatusCode insertTypeString(char* dataToInsert)
     unsigned int i;
     int count = 0;
     char* token;
-    char delimiter[1] = "\"";
+    char delimiter[2] = "\"";
     char line[MAX_FILE_LENGTH];
 
     if(isWhitespace(dataToInsert))

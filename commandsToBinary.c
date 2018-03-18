@@ -47,7 +47,12 @@ StatusCode checkType(char *reqOp, opType* result)
         if((dotPtr = strchr(reqOp,'.')) != NULL)
         {
             if(*(dotPtr+1) == '1' || *(dotPtr+1) == '2') /* struct */
-                operand=Struct;
+            {
+                if(isWhitespace(dotPtr+2)) /* Make sure rest of the string doesn't contain anything */
+                    operand=Struct;
+                else
+                    return operand_type_error;
+            }
             else
                 return operand_type_error;
         }
