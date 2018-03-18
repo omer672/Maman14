@@ -186,7 +186,7 @@ void insertRegisters(char* srcRegister,char* destRegister, int index)
     }
     instructionsArray[index] = (numberToInsert<<2); /* Absolute, no need to add */
 }
-
+/*The function trim the operand and checks if there's more then one operand*/
 StatusCode trimOperand(char* operand)
 {
     char first[LINE_LENGTH];
@@ -197,6 +197,7 @@ StatusCode trimOperand(char* operand)
         strcpy(operand,first);
     return success;
 }
+
 
 StatusCode insertTypeData(char* dataToInsert)
 {
@@ -282,7 +283,7 @@ StatusCode insertTypeStruct(char* dataToInsert)
         return struct_syntax_error;
     return success;
 }
-
+/*The function handles .data .string .struct type and inserts it to dataArray. Handles DC.*/
 StatusCode insertData(char* type, char* data)
 {
     type++; /* starts with . so we skip it */
@@ -316,6 +317,8 @@ StatusCode insertExtern(char* symbols)
     }
 }
 
+/*The function gets instruction, operands, checks if first or second iterate and handles instruction Array (enters Binary code)
+ * Handles errors through edge cases could appeared on line*/
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
     StatusCode code;

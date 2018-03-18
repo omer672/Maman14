@@ -42,6 +42,7 @@ Symbol* doesExist(char* name)
     return search(head,name);
 }
 
+/*The function checks if struct type exists*/
 Symbol* doesStructExist(char* name)
 {
     char* dotPtr;
@@ -51,6 +52,7 @@ Symbol* doesStructExist(char* name)
     return search(head,fixedName);
 }
 
+/*The function checks if symbol type is data type and updates his value*/
 void updateDataSymbolValues(int value)
 {
     Symbol* curr = head;

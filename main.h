@@ -23,21 +23,25 @@
 #define ENTRY "entry"
 
 /*TODO: FIX ALL STRCMP - when it returns 0 means both strings are equal */
-
+/*Enum to handle external and Relocatable*/
 typedef enum type { external = 0,relocatable } Types;
+
+/*enum to handle types of symbols found by definitions*/
 typedef enum symbolType { tCode, tData, tString, tStruct } SymbolType;
+
 typedef struct symbol
 {
-    char name[MAX_SYMBOL_LEN];
+    char name[MAX_SYMBOL_LEN]; /*Symbol name*/
     int references[MAX_FILE_LENGTH]; /* exter references */
     int refCounter;
     int value;
-    SymbolType symbolType;
-    int isEntry;
-    Types type;
+    SymbolType symbolType;/*symbol type*/
+    int isEntry; /*flag for is an entry*/
+    Types type;/*external/relocatable*/
     struct symbol* next;
 } Symbol;
 
+/*enum to handle errors through the program*/
 typedef enum errorList {
     success = 0,
     wrong_number_of_operands = -1,

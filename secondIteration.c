@@ -1,5 +1,7 @@
 #include "secondIteration.h"
-
+/*Second iterate runs over the file after symbols table created on first iterate
+ * will create Output files by definition.
+ * handles Errors through the run*/
 void secondIterate(FILE* file, char* fileName)
 {
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
@@ -59,7 +61,7 @@ void secondIterate(FILE* file, char* fileName)
             }
         }
     }
-    if(!errorsFound)
+    if(!errorsFound)/*case second iterate went successful, will create output files*/
     {
         createOutputFiles(fileName);
     }

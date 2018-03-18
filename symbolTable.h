@@ -22,9 +22,10 @@ Symbol* getHead();
  * Output: pointer to symbol of found*/
 Symbol* doesExist(char* name);
 
+/*The function checks if struct type exists*/
 Symbol* doesStructExist(char* name);
 
-/**/
+/*The function checks if symbol type is data type and updates his value*/
 void updateDataSymbolValues(int value);
 
 /*The function will free a linked list of symbols from allocated memory*/

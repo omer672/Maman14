@@ -1,5 +1,6 @@
 #include "Parsing.h"
 
+/*The function handles the 'Strange 32 Base' by cases*/
 char get32FromDigit(int digit)
 {
     char returnVal;
