@@ -43,6 +43,15 @@ Symbol* doesExist(char* name)
     return search(head,name);
 }
 
+Symbol* doesStructExist(char* name)
+{
+    char* dotPtr;
+    char fixedName[LINE_LENGTH];
+    dotPtr = strchr(name,'.');
+    strncpy(fixedName,name,(unsigned int)(dotPtr-name)); /* we only want the string before the . */
+    return search(head,fixedName);
+}
+
 void updateDataSymbolValues(int value)
 {
     Symbol* curr = head;

@@ -74,12 +74,127 @@ int isInt(char* string)
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
+int isValidSourceDest(OpCodes code,opType source, opType dest)
+{
+    int result = 0;
+    switch(code)
+    {
+    case mov:
+        result = dest != Immediate;
+        break;
+    case cmp:
+        result = 1;
+        break;
+    case add:
+    case sub:
+    case nnot:
+    case clr:
+        result = dest != Immediate;
+        break;
+    case lea:
+        result = (source == Direct || source == Struct) && dest != Immediate;
+        break;
+    case inc:
+    case dec:
+    case jmp:
+    case bne:
+    case red:
+        result = dest != Immediate;
+        break;
+    case prn:
+        result = 1;
+        break;
+    case jsr:
+        result = dest != Immediate;
+        break;
+    case rts:
+    case stop:
+        result = 1;
+        break;
+    }
+    return result;
+}
+
+int findStructField(char* operand)
+{
+    char* dotPtr;
+    if((dotPtr = strchr(operand,'.')) != NULL)
+    {
+        return *(dotPtr+1) - '0'; /* 1 or 2 */
+    }
+    return 0;
+}
+
+void insertDirect(Symbol* operand, int index)
+{
+    /* No need for validation because we already validated earlier */
+    int numberToInsert;
+    if(operand->type == external) /* If using external, we keep the adress of the command that used it */
+    {
+        numberToInsert = (operand->value) << 2;
+        operand->references[operand->refCounter] = index;
+        operand->refCounter++;
+    }
+    else
+        numberToInsert = (operand->value+START_ADDRESS) << 2;
+    numberToInsert += (operand->type + 1); /* External is 0, so we need to add 1 */
+    instructionsArray[index] = numberToInsert;
+}
+
+void insertStructField(char* operand, int index)
+{
+    /* No need for validation because we already validated earlier */
+    int numberToInsert = findStructField(operand);
+    numberToInsert <<= 2;
+    instructionsArray[index] = numberToInsert;
+}
+
+void insertImmediate(char* operand, int index)
+{
+    /* No need for validation because we already validated earlier */
+    int numberToInsert = twosComplements(atoi(operand+1),NUMBER_OF_BITS_INSTRUCTION); /* first char will be # */
+    instructionsArray[index] = (numberToInsert<<2); /* Absolute, no need to add */
+}
+
+void insertRegisters(char* srcRegister,char* destRegister, int index)
+{
+    int numberToInsert = 0;
+    /* No need for validation because we already validated earlier */
+    if(srcRegister != NULL && destRegister != NULL)
+    {
+        numberToInsert = *(srcRegister+1) - '0';
+        numberToInsert <<= 4;
+        numberToInsert += *(destRegister+1) - '0';
+    }
+    else
+    {
+        if(srcRegister != NULL)
+        {
+            numberToInsert = *(srcRegister+1) - '0';
+            numberToInsert <<= 4;
+        }
+        else
+            numberToInsert += *(destRegister+1) - '0';
+    }
+    instructionsArray[index] = (numberToInsert<<2); /* Absolute, no need to add */
+}
+
+StatusCode trimOperand(char* operand)
+{
+    char first[LINE_LENGTH];
+    char second[LINE_LENGTH];
+    if(sscanf(operand,"%s %s",first,second) != 1) /* Testing if there is more than 1 operand */
+        return wrong_number_of_operands;
+    else
+        strcpy(operand,first);
+    return success;
+}
+
 StatusCode insertTypeData(char* dataToInsert)
 {
     int tempDataArray[MAX_FILE_LENGTH];
     int i = 0;
     int j;
-    int endIndex;
     char* token;
     char line[MAX_FILE_LENGTH];
     if(isWhitespace(dataToInsert))
@@ -90,17 +205,17 @@ StatusCode insertTypeData(char* dataToInsert)
     while(token != NULL)
     {
         if(isInt(token)) /* Every token is suppose to contain one integer */
-            tempDataArray[i] = twosComplements(atoi(token));
+            tempDataArray[i] = twosComplements(atoi(token),NUMBER_OF_BITS_DATA);
         else
             return data_syntax_error;
         token = strtok(NULL, ",");
         i++;
     }
-    endIndex = DC+i;
-    for(j=DC; j<endIndex && DC<MAX_FILE_LENGTH;j++,DC++)
+    for(j=0; j<i && DC<MAX_FILE_LENGTH;j++)
     {
-        dataArray[DC] = tempDataArray[j-DC]; /* Fill the real data array after we discovered no errors */
+        dataArray[DC+j] = tempDataArray[j]; /* Fill the real data array after we discovered no errors */
     }
+    DC+=i;
     return success;
 }
 
@@ -197,77 +312,191 @@ StatusCode insertExtern(char* symbols)
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration)
 {
     StatusCode code;
+    opType sourceType = Immediate;
+    opType destType = Immediate; /* 0 as a default value */
+    Symbol* op1;
+    Symbol* op2;
     int sumL=0;
+    int i;
+    int bothRegisters = 0; /* boolean indicating if both operands are registers */
+    int count = 0;
+    int numberOfOperands;
     int keepBin;/*keep the binary num before insert to instruction array*/
     char firstOp[LINE_LENGTH];
     char secondOp[LINE_LENGTH];
-    char* token=strtok(operands,",");
-    strcpy(firstOp,token); /*first operand*/
-    token=strtok(NULL,"");
-    strcpy(secondOp,token);/*second operand*/
-    if((code = instSumRow(firstOp,secondOp,&sumL)) < 0)/*Sum of rows - to IC*/
-        return code;
+    char line[LINE_LENGTH];
+    char* token;
+    strcpy(line,operands); /* strtok ruins the string */
     keepBin=searchOp(instruction);/*will search the command and return its place(equals to his binary number)*/
-    /*insert 4 bits instruction binary to array*/
-    instructionsArray[IC]= keepBin;/*4 bits command inserted first*/
-    opType typeOne,typeTwo;
-    if((code = checkType(firstOp,&typeOne)) < 0) /*get the type of the first operand*/
-        return code;
-    if((code = checkType(secondOp,&typeTwo)) < 0) /*get the type of the second operand*/
-        return code;
 
-    /*First iterate*/
+    if(keepBin <= FIRST_INSTRUCTION_GROUP_INDEX) /* Two operands */
+    {
+        numberOfOperands = 2;
+        token = strtok(line, ",");
+        strcpy(firstOp,token);
+        if((code = trimOperand(firstOp)) < 0)
+            return code;
+        while(token != NULL)
+        {
+            if(count <= 1) /* Only copy the real operand, as we will search for extra , */
+                strcpy(secondOp,token);
+            token = strtok(NULL,","); /* get the rest, should be 1 more operand */
+            count++;
+        }
+        if(count > numberOfOperands)
+            return wrong_number_of_operands;
+        if((code = trimOperand(secondOp)) < 0)
+            return code;
+        printf("%s\t%s\n",firstOp,secondOp);
+        if((code = checkType(firstOp,&sourceType)) < 0) /*get the type of the first operand*/
+            return code;
+        if((code = checkType(secondOp,&destType)) < 0) /*get the type of the second operand*/
+            return code;
+    }
+    else if(keepBin > FIRST_INSTRUCTION_GROUP_INDEX && keepBin <= SECOND_INSTRUCTION_GROUP_INDEX) /* One operand */
+    {
+        numberOfOperands = 1;
+        if(sscanf(line,"%s %s",firstOp, secondOp) != numberOfOperands) /* using secondOp to test for extra text */
+            return wrong_number_of_operands;
+        if((code = checkType(firstOp,&destType)) < 0) /*get the type of the first operand*/
+            return code;
+    }
+    else /* No operands */
+    {
+        numberOfOperands = 0;
+        if(!isWhitespace(line))
+            return wrong_number_of_operands;
+    }
+    /* Validate the operands */
+    if(!isValidSourceDest(keepBin,sourceType,destType))
+        return invalid_source_dest_operands;
+    if((code = instSumRow(sourceType,destType,numberOfOperands,&sumL)) < 0)/*Sum of rows - to IC*/
+        return code;
+    /*First iteration*/
     if(isSecondIteration == 0)
     {
-        if (typeOne == '-' || typeTwo == '-') /*case got on unrecognized Symbol, enter '-'*/
-        {
-            instructionsArray[IC] = '-';/*will enter '-' as flag for second iterate - and continues*/
-            IC++;/*increases IC by '1' and continue;*/
-        }
-        else /*casual operands recognized*/
-        {
-            keepBin = typeOne;/*get binary by enum place.*/
-            /*insert 2 bits for source operand*/
-            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            keepBin = typeTwo;
-            /**insert 2 bits for destination operand**/
-            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            /*shift left 2 bits for A/R/E - first iterate, will place 00 end of command*/
-            instructionsArray[IC] = instructionsArray[IC] << 2;
-            IC += sumL;/*increases IC by the rows needed by the inserted command*/
-        }
+        /*insert 4 bits instruction binary to array*/
+        instructionsArray[IC]= keepBin;/*4 bits command inserted first*/
+        /*insert 2 bits for source operand*/
+        instructionsArray[IC] = (instructionsArray[IC] << 2) + sourceType; /*get binary by enum place.*/
+        instructionsArray[IC] = (instructionsArray[IC] << 2) + destType; /*insert 2 bits for destination operand*/
+        /*shift left 2 bits for A/R/E - first iterate, will place 00 end of command*/
+        instructionsArray[IC] = instructionsArray[IC] << 2;
+        IC += sumL;/*increases IC by the rows needed by the inserted command*/
     }
-    /*Second iterate*/
-    else
+    else /*Second iteration*/
     {
-        Symbol* op1, *op2; /*gets the type of Symbols that found on second iterate, similar to first iterate by definition*/
-        SymbolType opType1,opType2;
-        if((op1 = doesExist(firstOp)) == NULL)
-            return symbol_doesnt_exist;
-        if((op2 = doesExist(secondOp)) == NULL)
-            return symbol_doesnt_exist;
-        opType1=op1->symbolType;
-        opType2=op2->symbolType;
-        if((code = checkTypeSecIter(opType1,&typeOne)) < 0)
-            return code;
-        if((code = checkTypeSecIter(opType2,&typeTwo)) < 0)
-            return code;
-        if(instructionsArray[IC]=='-') /*if found flag '-' for symbols that have not recognized on first iterate*/
+        if(numberOfOperands > 0)
         {
-            instructionsArray[IC]='0';
-            /*Will find symbol on checkType function*/
-            keepBin = typeOne;/*get binary by enum place.*/
-            /*insert 2 bits for source operand*/
-            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            keepBin = typeTwo;
-            /**insert 2 bits for destination operand**/
-            instructionsArray[IC] = (instructionsArray[IC] << 2) + keepBin;
-            /* insert 2 bits for A/R/E */
-            instructionsArray[IC] = (instructionsArray[IC] << 2) +opType1;
-            IC += sumL; /*increases IC by the rows needed by the inserted command*/
+            if(numberOfOperands == 1)
+            {
+                if(destType == Struct || destType == Direct)
+                {
+                    if(destType == Direct)
+                    {
+                        if((op1 = doesExist(firstOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                    else
+                    {
+                        if((op1 = doesStructExist(firstOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                }
+            }
+            else /* Two operands */
+            {
+                if(sourceType == Struct || sourceType == Direct)
+                {
+                    if(sourceType == Direct)
+                    {
+                        if((op1 = doesExist(firstOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                    else
+                    {
+                        if((op1 = doesStructExist(firstOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                }
+                if(destType == Struct || destType == Direct)
+                {
+                    if(destType == Direct)
+                    {
+                        if((op2 = doesExist(secondOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                    else
+                    {
+                        if((op2 = doesStructExist(secondOp)) == NULL)
+                            return symbol_doesnt_exist;
+                    }
+                }
+            }
         }
-        else /*covered on first iterate*/
-            IC++;
+        /* Fill missing instructions, when number of operands > 0 */
+        bothRegisters = (numberOfOperands == 2 && sourceType == Register && destType == Register);
+        i=1;
+        if(numberOfOperands == 1)
+        {
+            switch(destType)
+            {
+            case Immediate:
+                insertImmediate(firstOp,i+IC);
+                break;
+            case Direct:
+                insertDirect(op1,i+IC);
+                break;
+            case Struct:
+                insertDirect(op1,i+IC);
+                i++;
+                insertStructField(firstOp,i+IC);
+                break;
+            case Register:
+                insertRegisters(firstOp,NULL,i+IC);
+                break;
+            }
+        }
+        else /* 2 operands */
+        {
+            switch(sourceType)
+            {
+            case Immediate:
+                insertImmediate(firstOp,i+IC);
+                break;
+            case Direct:
+                insertDirect(op1,i+IC);
+                break;
+            case Struct:
+                insertDirect(op1,i+IC);
+                i++;
+                insertStructField(firstOp,i+IC);
+                break;
+            case Register:
+                insertRegisters(firstOp,bothRegisters ? secondOp : NULL,i+IC);
+                break;
+            }
+            i++;
+            switch(destType)
+            {
+            case Immediate:
+                insertImmediate(secondOp,i+IC);
+                break;
+            case Direct:
+                insertDirect(op2,i+IC);
+                break;
+            case Struct:
+                insertDirect(op2,i+IC);
+                i++;
+                insertStructField(secondOp,i+IC);
+                break;
+            case Register:
+                if(!bothRegisters) /* otherwise, we already inserted earlier */
+                    insertRegisters(NULL,secondOp,i+IC);
+                break;
+            }
+        }
+        IC += sumL; /*increases IC by the rows needed by the inserted command*/
     }
     return success;
 }

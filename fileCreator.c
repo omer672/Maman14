@@ -46,6 +46,7 @@ void createExternFile(char *fileName)
     Symbol* head;
     Symbol* curr;
     FILE* file;
+    int i;
     strcpy(finalFileName,fileName); /* creates the file */
     strcat(finalFileName,".ext");
     if((file = fopen(finalFileName ,"w")) != NULL)
@@ -57,9 +58,12 @@ void createExternFile(char *fileName)
             if(curr->type == external)
             {
                 name = curr->name;
-                ConvertBinTo32(curr->value,address);
-                sprintf(lineBuffer,"%s\t%s\n",name,address);
-                fputs(lineBuffer,file);
+                for(i=0;i<curr->refCounter;i++)
+                {
+                    ConvertBinTo32(curr->references[i]+START_ADDRESS,address);
+                    sprintf(lineBuffer,"%s\t%s\n",name,address);
+                    fputs(lineBuffer,file);
+                }
             }
             curr = curr->next;
         }
@@ -93,7 +97,7 @@ void createEntryFile(char *fileName)
             if(curr->isEntry)
             {
                 name = curr->name;
-                ConvertBinTo32(curr->value,address);
+                ConvertBinTo32(curr->value+START_ADDRESS,address);
                 sprintf(lineBuffer,"%s\t%s\n",name,address);
                 fputs(lineBuffer,file);
             }

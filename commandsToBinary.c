@@ -11,8 +11,8 @@ StatusCode markEntry(char* symbol)
 
     while(token != NULL)
     {
-        printf("token: %s\n",token);
-        strcpy(name,token);
+        if(i<=1)
+            strcpy(name,token); /* Could be a token of space after the name, and we would lose it otherwise */
         i++;
         token = strtok(NULL,delimiter);
     }
@@ -54,12 +54,12 @@ StatusCode checkType(char *reqOp, opType* result)
     return success;
 }
 /*gets string operands and checks its type on second iterate - imm, direct, struct, register*/
-StatusCode checkTypeSecIter(SymbolType num, opType* result)
+StatusCode checkTypeSecIter(SymbolType sType, opType* result)
 {
     opType operand;
-    if(num==tData || num==tCode || num==tString)
+    if(sType==tData || sType==tCode || sType==tString)
         operand=Direct;
-    else if(num==tStruct)
+    else if(sType==tStruct)
         operand=Struct;
     else
         return operand_type_error;
@@ -82,35 +82,38 @@ StatusCode opSumRow(opType operand, int* result)
     return success;
 }
 /*takes 2 operands and returns number of rows the command will take*/
-StatusCode instSumRow(char *first, char *second, int* result)
+StatusCode instSumRow(opType firstTP, opType secondTP,int numberOfOperands, int* result)
 {
     int firstOpSum=0;
     int secOpSum=0;
-    int sumRows=0;
     StatusCode code;
-    opType firstTP, secondTP;
     /*check if only first operand exist*/
-    if(first!=NULL && second==NULL)
+    switch(numberOfOperands)
     {
-        /*get operand type*/
-        firstTP=checkType(first,&firstTP);
+    case 0:
+        break;
+    case 1:
+        if((code=opSumRow(firstTP,&firstOpSum)) < 0)
+            return code;
+        break;
+    case 2:
         /*get sum of rows for operand*/
         if((code=opSumRow(firstTP,&firstOpSum)) < 0)
             return code;
+        /*EDGE CASE - both registers*/
+        if(firstTP==Register && secondTP==Register)
+            secOpSum=0;
+        else
+            if((code=opSumRow(secondTP,&secOpSum)) < 0)
+                return code;
+        break;
+    default:
+        return wrong_number_of_operands;
+        break;
     }
-    if(second != NULL)
-    {
-        if((code=checkType(second,&secondTP)) < 0)
-            return code;
-        if((code=opSumRow(secondTP,&secOpSum)) < 0)
-            return code;
-    }
-    /*EDGE CASE - both registers*/
-    if(firstTP==Register && secondTP==Register)
-        secOpSum=0;
+
     /*calculates sum: first operand, second operand, command*/
-    sumRows=firstOpSum+secOpSum+1;
-    *result = sumRows;
+    *result = firstOpSum+secOpSum+1;
     return success;
 }
 /*search the command, return his place(equals to his binary 4 bits)*/

@@ -8,6 +8,8 @@ char* registers[] = {"r0","r1","r2","r3","r4","r5","r6","r7"};
 int dataArray[MAX_FILE_LENGTH];
 int instructionsArray[MAX_FILE_LENGTH];
 int DC,IC;
+int entryFound = 0;
+int externFound = 0;
 int errorsFound = 0;
 
 void iterate(FILE*, char*);

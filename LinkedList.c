@@ -7,12 +7,13 @@ Symbol* alloc()
 /*The function gets new symbol node variables and adds it as a new node to linked list
  * Input: Symbol head, new symbol name, value, type, is a entry, is external/relocateable type
  * Output: NULL*/
-void addSymbol(Symbol** head,char* name,int value,SymbolType sType,int isEntry,Types type)
+void addSymbol(Symbol** head,char* name,int value,SymbolType sType,int isEntry, Types type)
 {
     Symbol* curr;
     if(*head == NULL)/*checks if head doesn't exists*/
     {
         *head = alloc();
+        (*head)->refCounter = 0;
         strcpy((*head)->name,name);
         (*head)->value = value;
         (*head)->symbolType = sType;
@@ -26,6 +27,7 @@ void addSymbol(Symbol** head,char* name,int value,SymbolType sType,int isEntry,T
         while(curr->next)
             curr = curr->next;
         curr->next = alloc();
+        curr->next->refCounter = 0;
         strcpy(curr->next->name,name);
         curr->next->value = value;
         curr->next->symbolType = sType;

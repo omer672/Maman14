@@ -1,5 +1,7 @@
 #ifndef HELPER_H
 #define HELPER_H
+#define FIRST_INSTRUCTION_GROUP_INDEX 4
+#define SECOND_INSTRUCTION_GROUP_INDEX 13
 
 #include "main.h"
 #include "symbolTable.h"

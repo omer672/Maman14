@@ -11,6 +11,8 @@ void clearGlobals()
     DC = 0;
     IC = 0;
     errorsFound = 0;
+    entryFound = 0;
+    externFound = 0;
     freeSymbolTable();
 }
 
@@ -34,6 +36,7 @@ void iterate(FILE* file, char* fileName)
     DC = 0;
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
+        foundSymbol = 0;
         numberOfLines++;
         if(!(isWhitespace(lineBuffer) || (unsigned char)(*lineBuffer) == ';')) /* Checking for empty line or comment line */
         {

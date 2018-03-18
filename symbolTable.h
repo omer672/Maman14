@@ -22,6 +22,8 @@ Symbol* getHead();
  * Output: pointer to symbol of found*/
 Symbol* doesExist(char* name);
 
+Symbol* doesStructExist(char* name);
+
 /**/
 void updateDataSymbolValues(int value);
 

@@ -41,10 +41,9 @@ void getErrorMessage(StatusCode code,char* message)
     case inst_sum_error:
         strcpy(message,"instruction rows summary error");
         break;
-
-
-
-
+    case invalid_source_dest_operands:
+        strcpy(message,"Invalid source or destination operands");
+        break;
     }
 }
 

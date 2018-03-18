@@ -1,29 +1,5 @@
 #include "Parsing.h"
 
-/*string to binary - > binary -> strange base*/
-/*check if negative -> use two complements*/
-/*DOESNOT WORK YET*/
-
-int stringToBinary(char* s) {
-    if(s == NULL) return 0; /* no input string */
-    size_t len = strlen(s);
-    size_t i;
-    int j;
-    char *binary = malloc(len*8 + 1); /* each char is one byte (8 bits) and + 1 at the end for null terminator*/
-    binary[0] = '\0';
-    for(i = 0; i < len; ++i) {
-        char ch = s[i];
-        for(j = 7; j >= 0; --j){
-            if(ch & (1 << j)) {
-                strcat(binary,"1");
-            } else {
-                strcat(binary,"0");
-            }
-        }
-    }
-    return binary;
-}
-
 char get32FromDigit(int digit)
 {
     char returnVal;
@@ -135,11 +111,12 @@ char get32FromDigit(int digit)
  * The func will get number(binary)
  * The func will return integer presented as binary number
  *         in case of failure return -1 and print an error message*/
-int twosComplements(int number)
+int twosComplements(int number, int numberOfBits)
 {
+    int mask = ((1<<numberOfBits) - 1); /* maximum allowed integer */
     int isNegetive = number < 0;
-    int base = BASE_NUM;
-    int cutNum = abs(number) & MASK_10_BITS; /* cutting excess bits (more than 10) */
+    int base = 1<<numberOfBits;
+    int cutNum = abs(number) & mask; /* cutting excess bits (more than 10) */
     return isNegetive ? (base - cutNum) : cutNum; /* if the number was negetive return the twos complement, otherwise return it back */
 }
 

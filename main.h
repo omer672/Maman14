@@ -14,16 +14,20 @@
 #define MAX_DIGITS 12
 #define START_ADDRESS 100
 #define MAX_FILE_LENGTH 256
+#define NUMBER_OF_BITS_DATA 10
+#define NUMBER_OF_BITS_INSTRUCTION 8
 #define EXTERN "extern"
 #define ENTRY "entry"
 
 /*TODO: FIX ALL STRCMP - when it returns 0 means both strings are equal */
 
-typedef enum type { external,relocatable } Types;
+typedef enum type { external = 0,relocatable } Types;
 typedef enum symbolType { tCode, tData, tString, tStruct } SymbolType;
 typedef struct symbol
 {
     char name[MAX_SYMBOL_LEN];
+    int references[MAX_FILE_LENGTH]; /* exter references */
+    int refCounter;
     int value;
     SymbolType symbolType;
     int isEntry;
@@ -44,12 +48,11 @@ typedef enum errorList {
     symbol_not_recognized=-9,
     operand_type_error=-10,
     row_count_error=-11,
-    inst_sum_error=-12
-
-    /* Tal add any errors you need in this format (decsending numbers) */
+    inst_sum_error=-12,
+    invalid_source_dest_operands = -13
 } StatusCode;
-
-typedef enum opCode { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } OpCodes;
+/* not gives compilation error (reserved word) */
+typedef enum opCode { mov, cmp, add, sub, nnot, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } OpCodes;
 
 /*Im - 00, Direct=01, Struct=10, register=11*/
 typedef enum types { Immediate = 0, Direct, Struct, Register} opType;
@@ -61,6 +64,8 @@ extern int dataArray[MAX_FILE_LENGTH];
 extern int instructionsArray[MAX_FILE_LENGTH];
 extern int DC,IC;
 extern int errorsFound;
+extern int entryFound;
+extern int externFound;
 
 void runProg(char* fileName);
 
