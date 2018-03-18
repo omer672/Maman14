@@ -6,7 +6,7 @@
 #include "helper.h"
 #include <ctype.h>
 
-/*The function gets pointer to symbol and checks if the name is legal.
+/*The function gets a string of a symbol and checks if the name is legal.
  * Case legal - success
  * case illegal - returns error*/
 StatusCode isLegal(char* symbol);
@@ -22,10 +22,10 @@ Symbol* getHead();
  * Output: pointer to symbol of found*/
 Symbol* doesExist(char* name);
 
-/*The function checks if struct type exists*/
+/*The function checks if struct type exists (for example name could be: S1.1 */
 Symbol* doesStructExist(char* name);
 
-/*The function checks if symbol type is data type and updates his value*/
+/*The function updates all values of the data symbols by IC*/
 void updateDataSymbolValues(int value);
 
 /*The function will free a linked list of symbols from allocated memory*/

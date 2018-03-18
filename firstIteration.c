@@ -30,7 +30,7 @@ void iterate(FILE* file, char* fileName)
     char command[LINE_LENGTH];
     char restOfLine[LINE_LENGTH];
     char symbol[LINE_LENGTH];
-    char* delimit = " \t\n";          /*Auxiliary flag for tabs*/
+    char* delimit = " \t\n";          /*delimiter for spaces*/
     char lineBuffer[LINE_LENGTH];
     char linebufferCopy[LINE_LENGTH]; /*Copy of the line buffer because strtok destroys the string*/
     int symbolPosition;

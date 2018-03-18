@@ -1,4 +1,5 @@
 #include "LinkedList.h"
+
 /*The function allocates new memory for symbols*/
 Symbol* alloc()
 {

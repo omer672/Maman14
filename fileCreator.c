@@ -1,6 +1,8 @@
 #include "fileCreator.h"
 
-/*The function creates .ob file*/
+/*The function creates .ob file
+ * Input: extern file name
+ * Output: creates the file at the project directory*/
 void createObjFile(char *fileName)
 {
     int i;

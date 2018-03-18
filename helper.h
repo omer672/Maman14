@@ -14,7 +14,7 @@ int isInstuction(char* string);
 /*The functions checks if string inserted is a data type by definition*/
 int isDataType(char* string);
 
-/*The function checks if string inserted is a register(r1..r9)*/
+/*The function checks if string inserted is a register(r0..r7)*/
 int isRegister(char* string);
 
 /*The function checks if string inserted is a extern by definition*/
@@ -31,11 +31,11 @@ int isEntry(char* string);
 
 /*The function handles .data .string .struct type and inserts it to dataArray. Handles DC.*/
 StatusCode insertData(char* type, char *data);
-
+/*The function handles .extern type and inserts it to the symbol table, marking it accordingly */
 StatusCode insertExtern(char* symbols);
 
 /*The function gets instruction, operands, checks if first or second iterate and handles instruction Array (enters Binary code)
- * Handles errors through edge cases could appeared on line*/
+ * Handles errors through edge cases that could appeared on line */
 StatusCode insertInstruction(char* instruction, char* operands, int isSecondIteration);
 
 #endif

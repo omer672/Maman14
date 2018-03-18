@@ -110,8 +110,7 @@ char get32FromDigit(int digit)
 
 /* Two Complement Method in order to avoid negative numbers
  * The func will get number(binary)
- * The func will return integer presented as binary number
- *         in case of failure return -1 and print an error message*/
+ * The func will return integer presented as binary number */
 int twosComplements(int number, int numberOfBits)
 {
     int mask = ((1<<numberOfBits) - 1); /* maximum allowed integer */

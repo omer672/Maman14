@@ -1,5 +1,8 @@
 /*Maman 14, created by Omer Cheri & Tal Boosy
- * Group 01, Roy Rachmany*/
+ * Group 01, Roy Rachmany
+ * Assumptions: number of instructions and data entries should be 255 or less (if there is a need for more, change MAX_FILE_LENGTH).
+ * Also, for strings, please use the standard " char, and not the rounded ones (the unicode ones that aren't part of ascii)
+*/
 
 #ifndef MAIN_H
 #define MAIN_H
@@ -32,8 +35,8 @@ typedef enum symbolType { tCode, tData, tString, tStruct } SymbolType;
 typedef struct symbol
 {
     char name[MAX_SYMBOL_LEN]; /*Symbol name*/
-    int references[MAX_FILE_LENGTH]; /* exter references */
-    int refCounter;
+    int references[MAX_FILE_LENGTH]; /* extern references */
+    int refCounter; /* last index in array */
     int value;
     SymbolType symbolType;/*symbol type*/
     int isEntry; /*flag for is an entry*/
@@ -64,6 +67,7 @@ typedef enum opCode { mov, cmp, add, sub, nnot, clr, lea, inc, dec, jmp, bne, re
 /*Im - 00, Direct=01, Struct=10, register=11*/
 typedef enum types { Immediate = 0, Direct, Struct, Register} opType;
 
+/* Globals */
 extern char* instructions[NUM_OF_INSTRUCTS];
 extern char* dataTypes[NUM_OF_DATA_TYPES];
 extern char* registers[NUM_OF_REGISTERS];

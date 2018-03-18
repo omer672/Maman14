@@ -3,7 +3,6 @@
 #include "helper.h"
 #include <ctype.h>
 
-
 /*The function checks if the symbol inserted is entry and marks it*/
 StatusCode markEntry(char* symbol);
 
