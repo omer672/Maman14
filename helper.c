@@ -243,7 +243,7 @@ StatusCode insertTypeString(char* dataToInsert)
             strcpy (actualString, token);
             count++;
         }
-        token = strtok(line+strlen(line)+1, delimiter); /* Keep going from where we were last */
+        token = strtok(NULL, delimiter); /* Keep going from where we were last */
     }
     if (count != 1) /* Meaning no strings were found or more than 1 string was found */
         return string_syntax_error;
@@ -332,6 +332,8 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
     {
         numberOfOperands = 2;
         token = strtok(line, ",");
+        if(token == NULL)
+            return wrong_number_of_operands;
         strcpy(firstOp,token);
         if((code = trimOperand(firstOp)) < 0)
             return code;
@@ -346,7 +348,6 @@ StatusCode insertInstruction(char* instruction, char* operands, int isSecondIter
             return wrong_number_of_operands;
         if((code = trimOperand(secondOp)) < 0)
             return code;
-        printf("%s\t%s\n",firstOp,secondOp);
         if((code = checkType(firstOp,&sourceType)) < 0) /*get the type of the first operand*/
             return code;
         if((code = checkType(secondOp,&destType)) < 0) /*get the type of the second operand*/

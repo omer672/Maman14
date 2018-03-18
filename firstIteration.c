@@ -24,37 +24,46 @@ void iterate(FILE* file, char* fileName)
     int foundSymbol = 0;            /*Auxiliary flag - checks if symbol found*/
     int numberOfLines = 0;          /*Auxiliary integer - counts lines*/
     char* symbolPos;               /*Auxiliary pointer - to position of symbol*/
+    char* token;
     char command[LINE_LENGTH];
     char restOfLine[LINE_LENGTH];
     char symbol[LINE_LENGTH];
-    char* delimit = " \t";          /*Auxiliary flag for tabs*/
+    char* delimit = " \t\n";          /*Auxiliary flag for tabs*/
     char lineBuffer[LINE_LENGTH];
     char linebufferCopy[LINE_LENGTH]; /*Copy of the line buffer because strtok destroys the string*/
     int symbolPosition;
-
     IC = 0;
     DC = 0;
     while(fgets(lineBuffer,LINE_LENGTH,file) != NULL)
     {
         foundSymbol = 0;
         numberOfLines++;
+        symbol[0] = '\0';
         if(!(isWhitespace(lineBuffer) || (unsigned char)(*lineBuffer) == ';')) /* Checking for empty line or comment line */
         {
             strcpy(linebufferCopy,lineBuffer);
-
-            strcpy(command, strtok(lineBuffer, delimit));
+            token = strtok(lineBuffer, delimit);
+            strcpy(command, token);
             if ((symbolPos = strchr(command, ':')) != NULL)	/*Checks if there is a symbol */
             {
                 symbolPosition = (int)(symbolPos-command);
                 strncpy(symbol, command,symbolPosition);
                 symbol[symbolPosition] = '\0'; /* strncpy doesn't insert \0 at the end */
                 foundSymbol = 1;
-                strcpy(command, strtok(NULL, delimit));	/*Should contain instruction/data command */
+                token = strtok(NULL, delimit);
+                if(token == NULL)
+                {
+                    errorsFound = 1;
+                    printError(unrecognized_command,numberOfLines,fileName);
+                    continue;
+                }
+                strcpy(command, token);	/*Should contain instruction/data command */
             }
-            strcpy(restOfLine, strtok(NULL, ""));	/*Gets the rest of the line */
-
-            printf("symbol: %s, command: %s, restOfLine: %s\n",symbol,command,restOfLine);
-
+            token =  strtok(NULL, "");
+            if(token != NULL)
+                strcpy(restOfLine,token);	/*Gets the rest of the line */
+            else
+                restOfLine[0] = '\0';
             if(isDataType(command)) /*Data type*/
             {
                 if(foundSymbol)
@@ -81,7 +90,6 @@ void iterate(FILE* file, char* fileName)
             {
                 if(isExtern(command) || isEntry(command)) /*Extern/Entry*/
                 {
-                    printf("restOfLine: %s\n",restOfLine);
                     if(isExtern(command))
                         if((code = insertExtern(restOfLine)) < 0)
                         {

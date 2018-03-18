@@ -21,7 +21,6 @@ StatusCode isLegal(char* symbol)
 /*The function gets new symbol variables and checks if legal. case legal - adds a new symbol. else - prints error*/
 StatusCode setSymbol(char* name,int value,SymbolType sType,int isEntry, Types type)
 {
-    printf("setSymbol, symbol: %s\n",name);
     if(isLegal(name) < 0)
         return illigal_symbol_name;
     if(doesExist(name) != NULL)

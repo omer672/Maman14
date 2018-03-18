@@ -31,7 +31,7 @@ void createObjFile(char *fileName)
     }
     else
     {
-        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
+        fprintf(stderr,"File cannot be created, moving on. %s",finalFileName);
     }
 }
 /*The function creates .ext file
@@ -71,7 +71,7 @@ void createExternFile(char *fileName)
     }
     else
     {
-        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
+        fprintf(stderr,"File cannot be created, moving on. %s",finalFileName);
     }
 }
 /*The function creates .ent file
@@ -107,7 +107,7 @@ void createEntryFile(char *fileName)
     }
     else
     {
-        fprintf(stderr,"File cannot be open, moving on. %s",finalFileName);
+        fprintf(stderr,"File cannot be created, moving on. %s",finalFileName);
     }
 }
 /*The function creates all requested files to create
